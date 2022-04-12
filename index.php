@@ -118,9 +118,7 @@ $tasks = [
 
                 <table class="tasks">
                     <?php foreach($tasks as $key => $val): ?>
-                        <?php if ($val['complete'] && !$show_complete_tasks) { 
-                            continue;
-                        } ?>
+                        <?php if ($val['complete'] && !$show_complete_tasks): continue; endif; ?>
                         <tr class="tasks__item task<?php if ($val['complete']):?> task--completed<?php endif;?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
