@@ -2,37 +2,37 @@
 $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 $tasks = [
-    0 => [
+    [
         'title' => 'Собеседование в IT компании',
         'date' => '01.12.2019',
         'category' => 'Работа',
         'complete' => false
     ],
-    1 => [
+    [
         'title' => 'Выполнить тестовое задание',
         'date' => '	25.12.2019',
         'category' => 'Работа',
         'complete' => false
     ],
-    2 => [
+    [
         'title' => 'Сделать задание первого раздела',
         'date' => '21.12.2019',
         'category' => 'Учеба',
         'complete' => true
     ],
-    3 => [
+    [
         'title' => 'Встреча с другом',
         'date' => '22.12.2019',
         'category' => 'Входящие',
         'complete' => false
     ],
-    4 => [
+    [
         'title' => 'Купить корм для кота',
         'date' => null,
         'category' => 'Домашние дела',
         'complete' => false
     ],
-    5 => [
+    [
         'title' => 'Заказать пиццу',
         'date' => null,
         'category' => 'Домашние дела',
