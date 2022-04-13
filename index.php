@@ -2,43 +2,52 @@
 $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 $tasks = [
-    0 => [
+    [
         'title' => 'Собеседование в IT компании',
         'date' => '01.12.2019',
         'category' => 'Работа',
         'complete' => false
     ],
-    1 => [
+    [
         'title' => 'Выполнить тестовое задание',
         'date' => '	25.12.2019',
         'category' => 'Работа',
         'complete' => false
     ],
-    2 => [
+    [
         'title' => 'Сделать задание первого раздела',
         'date' => '21.12.2019',
         'category' => 'Учеба',
         'complete' => true
     ],
-    3 => [
+    [
         'title' => 'Встреча с другом',
         'date' => '22.12.2019',
         'category' => 'Входящие',
         'complete' => false
     ],
-    4 => [
+    [
         'title' => 'Купить корм для кота',
         'date' => null,
         'category' => 'Домашние дела',
         'complete' => false
     ],
-    5 => [
+    [
         'title' => 'Заказать пиццу',
         'date' => null,
         'category' => 'Домашние дела',
         'complete' => false
     ],
 ];
+function count_tasks($tasks_list, $project_name) {
+    $count = 0;
+    foreach($tasks_list as $key => $val) {
+        if ($val['category'] === $project_name) {
+            $count++;
+        }
+    }
+    return $count;
+}  
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -83,7 +92,7 @@ $tasks = [
                         <?php foreach($projects as $project): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?= $project ?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?= count_tasks($tasks, $project); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -118,9 +127,7 @@ $tasks = [
 
                 <table class="tasks">
                     <?php foreach($tasks as $key => $val): ?>
-                        <?php if ($val['complete'] && !$show_complete_tasks) { 
-                            continue;
-                        } ?>
+                        <?php if ($val['complete'] && !$show_complete_tasks): continue; endif; ?>
                         <tr class="tasks__item task<?php if ($val['complete']):?> task--completed<?php endif;?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
