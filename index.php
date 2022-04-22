@@ -45,7 +45,7 @@ $tasks = [
 $page_content_data = [
     'projects' => $projects, 
     'tasks' => $tasks,
-    'show_complete_tasks' => $show_complete_tasks // По условиям задания эту переменную передавать не просили, но и удалять тоже вроде бы было не нужно. Решил пока сохранить до тех пор, пока не появится явное указание от неё избавиться.
+    'show_complete_tasks' => $show_complete_tasks
 ];
 $page_content = include_template('main.php', $page_content_data);
 
