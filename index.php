@@ -6,25 +6,25 @@ $projects = ["Входящие", "Учеба", "Работа", "Домашние
 $tasks = [
     [
         'title' => 'Собеседование в IT компании',
-        'date' => '01.12.2019',
+        'date' => '23.04.2022',
         'category' => 'Работа',
         'complete' => false
     ],
     [
         'title' => 'Выполнить тестовое задание',
-        'date' => '	25.12.2019',
+        'date' => '	25.05.2022',
         'category' => 'Работа',
         'complete' => false
     ],
     [
         'title' => 'Сделать задание первого раздела',
-        'date' => '21.12.2019',
+        'date' => '21.05.2022',
         'category' => 'Учеба',
         'complete' => true
     ],
     [
         'title' => 'Встреча с другом',
-        'date' => '22.12.2019',
+        'date' => '22.05.2022',
         'category' => 'Входящие',
         'complete' => false
     ],
@@ -45,7 +45,7 @@ $tasks = [
 $page_content_data = [
     'projects' => $projects, 
     'tasks' => $tasks,
-    'show_complete_tasks' => $show_complete_tasks // По условиям задания эту переменную передавать не просили, но и удалять тоже вроде бы было не нужно. Решил пока сохранить до тех пор, пока не появится явное указание от неё избавиться.
+    'show_complete_tasks' => $show_complete_tasks
 ];
 $page_content = include_template('main.php', $page_content_data);
 
