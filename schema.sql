@@ -7,23 +7,23 @@ USE doingsdone;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    email VARCHAR(256) NOT NULL UNIQUE,
-    name VARCHAR(256) NOT NULL,
-    password VARCHAR(256) NOT NULL
+    email VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
+    password VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(256) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     user_id INT NOT NULL
 );
 
 CREATE TABLE tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     status BOOL NOT NULL DEFAULT '0',
-    title VARCHAR(256) NOT NULL,
-    filepath VARCHAR(256),
+    title VARCHAR(255) NOT NULL,
+    filepath VARCHAR(255),
     deadline DATETIME,
     project_id INT NOT NULL,
     user_id INT NOT NULL
