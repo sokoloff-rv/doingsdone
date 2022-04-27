@@ -5,8 +5,8 @@
         <ul class="main-navigation__list">
             <?php foreach($projects as $project): ?>
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($project) ?></a>
-                <span class="main-navigation__list-item-count"><?= count_tasks($tasks, $project); ?></span>
+                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($project['title']) ?></a>
+                <span class="main-navigation__list-item-count"><?= count_tasks($tasks, $project['title']); ?></span>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -40,17 +40,17 @@
 
     <table class="tasks">
         <?php foreach($tasks as $key => $value): ?>
-        <?php if ($value['complete'] && !$show_complete_tasks): continue; endif; ?>
+        <?php if ($value['status'] && !$show_complete_tasks): continue; endif; ?>
         <tr class="tasks__item task
-        <?php if (check_important($value['date'])):?> task--important<?php endif;?>
-        <?php if ($value['complete']):?> task--completed<?php endif;?>">
+        <?php if (check_important($value['deadline'])):?> task--important<?php endif;?>
+        <?php if ($value['status']):?> task--completed<?php endif;?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($value['complete']):?>checked<?php endif;?>>
+                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($value['status']):?>checked<?php endif;?>>
                     <span class="checkbox__text"><?= htmlspecialchars($value['title']) ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= htmlspecialchars($value['date']) ?></td>
+            <td class="task__date"><?= htmlspecialchars($value['deadline']) ?></td>
             <td class="task__controls"></td>
         </tr>
         <?php endforeach; ?>

@@ -1,59 +1,36 @@
 <?php
 require_once('helpers.php');
-require_once('functions.php');
-$show_complete_tasks = rand(0, 1);
-$projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
-$tasks = [
-    [
-        'title' => 'Собеседование в IT компании',
-        'date' => '23.04.2022',
-        'category' => 'Работа',
-        'complete' => false
-    ],
-    [
-        'title' => 'Выполнить тестовое задание',
-        'date' => '	25.05.2022',
-        'category' => 'Работа',
-        'complete' => false
-    ],
-    [
-        'title' => 'Сделать задание первого раздела',
-        'date' => '21.05.2022',
-        'category' => 'Учеба',
-        'complete' => true
-    ],
-    [
-        'title' => 'Встреча с другом',
-        'date' => '22.05.2022',
-        'category' => 'Входящие',
-        'complete' => false
-    ],
-    [
-        'title' => 'Купить корм для кота',
-        'date' => null,
-        'category' => 'Домашние дела',
-        'complete' => false
-    ],
-    [
-        'title' => 'Заказать пиццу',
-        'date' => null,
-        'category' => 'Домашние дела',
-        'complete' => false
-    ],
-];
+require_once('init.php');
 
-$page_content_data = [
-    'projects' => $projects, 
-    'tasks' => $tasks,
-    'show_complete_tasks' => $show_complete_tasks
-];
-$page_content = include_template('main.php', $page_content_data);
+$show_complete_tasks = rand(0, 1);
+$user_id = 2;
+
+if (!$connect) {
+    $error = mysqli_connect_error();
+    $page_content = include_template('error.php', ['error' => $error]);    
+}
+else {
+    $sql_users = "SELECT name FROM users WHERE id = $user_id";
+    $user = mysqli_fetch_assoc(mysqli_query($connect, $sql_users));
+
+    $sql_projects = "SELECT title FROM projects WHERE user_id = $user_id";
+    $projects = mysqli_fetch_all(mysqli_query($connect, $sql_projects), MYSQLI_ASSOC);
+
+    $sql_tasks = "SELECT status, t.title, deadline, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id";
+    $tasks = mysqli_fetch_all(mysqli_query($connect, $sql_tasks), MYSQLI_ASSOC);
+
+    $page_content_data = [
+        'projects' => $projects, 
+        'tasks' => $tasks,
+        'show_complete_tasks' => $show_complete_tasks
+    ];
+    $page_content = include_template('main.php', $page_content_data);
+}
 
 $layout_content_data = [
     'page_content' => $page_content,
-    'user_name' => 'Константин',
-    'page_name' => 'Дела в порядке'
-    
+    'user_name' => $user['name'],
+    'page_name' => 'Дела в порядке'    
 ];
 $layout_content = include_template('layout.php', $layout_content_data);
 
