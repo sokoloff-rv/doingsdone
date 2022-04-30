@@ -30,8 +30,7 @@ function check_important($task_date) {
         $task_timestamp = strtotime($task_date);
         $remainder_in_seconds = $task_timestamp - $actual_timestamp;
         $remainder_in_hours = floor($remainder_in_seconds / 3600);
-        $remainder_in_hours < 24 ? $is_important = true : $is_important = false;
-        return $is_important;
+        return $remainder_in_hours < 24;
     }
 }
 
@@ -64,7 +63,7 @@ function get_user_name(mysqli $connect, int $user_id) {
  * @return array ассоциативный массив с названиями проектов
  */
 function get_user_projects(mysqli $connect, int $user_id) {
-    $sql = "SELECT title FROM projects WHERE user_id = $user_id";
+    $sql = "SELECT id, title FROM projects WHERE user_id = $user_id";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -83,7 +82,7 @@ function get_user_projects(mysqli $connect, int $user_id) {
  * 
  * @return array ассоциативный массив с названиями проектов
  */
-function get_user_tasks(mysqli $connect, int $user_id) {
+function get_all_user_tasks(mysqli $connect, int $user_id) {
     $sql = "SELECT status, t.title, deadline, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id";
     $result = mysqli_query($connect, $sql);
     if ($result) {
@@ -94,3 +93,24 @@ function get_user_tasks(mysqli $connect, int $user_id) {
     }
     return $tasks;
 }  
+
+/**
+ * Получает из базы данных список задач пользователя, относящихся к конкретному проекту, по id этого пользователя
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param int $project_id идентификатор проекта
+ * @param int $user_id идентификатор пользователя
+ * 
+ * @return array ассоциативный массив с названиями проектов
+ */
+function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id) {
+    $sql = "SELECT status, t.title, deadline, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    return $tasks;
+}

@@ -4,9 +4,9 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach($projects as $project): ?>
-            <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($project['title']) ?></a>
-                <span class="main-navigation__list-item-count"><?= count_tasks($tasks, $project['title']); ?></span>
+            <li class="main-navigation__list-item <?php if (($selected_project_id) === $project['id']):?>main-navigation__list-item--active<?php endif;?>">
+                <a class="main-navigation__list-item-link" href="/index.php?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
+                <span class="main-navigation__list-item-count"><?= count_tasks($all_tasks, $project['title']); ?></span>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -39,7 +39,7 @@
     </div>
 
     <table class="tasks">
-        <?php foreach($tasks as $key => $value): ?>
+        <?php foreach($visible_tasks as $key => $value): ?>
         <?php if ($value['status'] && !$show_complete_tasks): continue; endif; ?>
         <tr class="tasks__item task
         <?php if (check_important($value['deadline'])):?> task--important<?php endif;?>
