@@ -17,6 +17,7 @@ if (empty($visible_tasks)) {
     $page_content = include_template('error.php', $error);
     $layout_content = include_template('layout.php', ['page_content' => $page_content]);
     print($layout_content);
+    exit();
 }
 
 $page_content_data = [
