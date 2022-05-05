@@ -50,7 +50,12 @@
                     <span class="checkbox__text"><?= htmlspecialchars($value['title']) ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= htmlspecialchars($value['deadline']) ?></td>
+            <td class="task__file">
+                <?php if ($value['filepath']): ?>
+                    <a class="download-link" href="<?= $value['filepath'] ?>">Скачать файл</a>
+                <?php endif;?>
+            </td>            
+            <td class="task__date"><?= $value['deadline'] ? date("Y-m-d", strtotime(htmlspecialchars($value['deadline']))) : 'Без даты' ?></td>
             <td class="task__controls"></td>
         </tr>
         <?php endforeach; ?>

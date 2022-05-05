@@ -24,6 +24,8 @@ input.visually-hidden {
 
   white-space: nowrap;
 
+  -webkit-clip-path: inset(100%);
+
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
@@ -547,11 +549,11 @@ a:focus {
 }
 
 .task__file {
-  width: 190px;
+  width: 150px;
 }
 
 .task__date {
-  width: 80px;
+  width: 100px;
 }
 
 .task__controls {
