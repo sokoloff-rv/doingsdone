@@ -1,7 +1,5 @@
 <?php
 require_once('init.php');
-$show_complete_tasks = rand(0, 1);
-$user_id = 1;
 
 $selected_project_id = filter_input(INPUT_GET, 'project_id');
 
@@ -17,6 +15,7 @@ if (empty($visible_tasks)) {
     $page_content = include_template('error.php', $error);
     $layout_content = include_template('layout.php', ['page_content' => $page_content]);
     print($layout_content);
+    exit();
 }
 
 $page_content_data = [

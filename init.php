@@ -2,6 +2,9 @@
 require_once('helpers.php');
 require_once('functions.php');
 
+$user_id = 1;
+$show_complete_tasks = rand(0, 1);
+
 $database = require_once('database.php');
 $connect = mysqli_connect($database['host'], $database['user'], $database['password'], $database['name']);
 mysqli_set_charset($connect, "utf8");
