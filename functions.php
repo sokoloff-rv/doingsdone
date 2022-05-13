@@ -214,5 +214,6 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
     if (!$result) {
         $error = mysqli_error($connect);
         print ("Ошибка подключения к БД: " . $error);
+        exit();
     }
 }

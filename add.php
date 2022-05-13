@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['date'] = is_correct_date('date');
 
     $deadline = null;
-    if ($_POST['date']) {
+    if (isset($_POST['date'])) {
         $deadline = $_POST['date'];
     }
 
@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors['name']) && empty($errors['project']) && empty($errors['date'])) {
         add_new_task($connect, $_POST['name'], $file_link, $deadline, $_POST['project'], $user_id);
         header('Location: /index.php');
+        exit();
     }
 };
 
