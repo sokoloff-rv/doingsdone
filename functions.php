@@ -131,7 +131,7 @@ function get_post_value($input_name) {
  *
  * @param string $input_name имя поля
  * 
- * @return string текст ошибки
+ * @return string|null текст ошибки
  */
 function is_filled($input_name) {
     if (empty($_POST[$input_name])) {
@@ -145,7 +145,7 @@ function is_filled($input_name) {
  * @param array $projects массив с id всех проектов пользователя
  * @param string $input_name имя поля
  * 
- * @return string текст ошибки
+ * @return string|null текст ошибки
  */
 function is_project_exist($projects, $input_name) {
     $project_exists = false;
@@ -164,10 +164,12 @@ function is_project_exist($projects, $input_name) {
  *
  * @param string $input_name имя поля
  * 
- * @return string текст ошибки
+ * @return string|null текст ошибки
  */
 function is_correct_date($input_name) {
     if (!empty($_POST[$input_name])) {
+        
+        $text_error = "";
 
         if (!is_date_valid($_POST[$input_name])) {
             $text_error = "Введите дату в формате ГГГГ-ММ-ДД! ";
@@ -194,16 +196,16 @@ function is_correct_date($input_name) {
  * @param int $user_id - id пользователя, который создал задачу
  * 
  */
-function add_new_task(mysqli $connect, string $title, string $filepath, string $deadline, int $project_id, int $user_id) {
+function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string $deadline, int $project_id, int $user_id) {
     $title = mysqli_real_escape_string($connect, $title);
     $filepath = mysqli_real_escape_string($connect, $filepath);
     $deadline = mysqli_real_escape_string($connect, $deadline);
 
     $sql = "INSERT INTO tasks SET title = '$title', project_id = '$project_id', user_id='$user_id'";
-    if ($deadline !== 'NULL') {
+    if ($deadline) {
         $sql = $sql . ", deadline = '$deadline'";
     }
-    if ($filepath !== 'NULL') {
+    if ($filepath) {
         $sql = $sql . ", filepath = '$filepath'";
     }
     $sql = $sql . ";";

@@ -9,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['project'] = is_project_exist($projects_list, 'project');
     $errors['date'] = is_correct_date('date');
 
-    $deadline = 'NULL';
+    $deadline = null;
     if ($_POST['date']) {
         $deadline = $_POST['date'];
     }
 
-    $file_link = 'NULL';
+    $file_link = null;
     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
         $file_name = 'file-' . uniqid() . '_' . $_FILES['file']['name'];
         $file_path = __DIR__ . '/uploads/';
