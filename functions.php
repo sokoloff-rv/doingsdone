@@ -168,20 +168,16 @@ function is_project_exist($projects, $input_name) {
  */
 function is_correct_date($input_name) {
     if (!empty($_POST[$input_name])) {
-        
-        $text_error = "";
 
         if (!is_date_valid($_POST[$input_name])) {
-            $text_error = "Введите дату в формате ГГГГ-ММ-ДД! ";
+            return "Введите дату в формате ГГГГ-ММ-ДД! "; 
         }
 
         $task_date = $_POST[$input_name];
         $actual_date = date('Y-m-d');
         if ((strtotime($actual_date) - strtotime($task_date)) / 86400 > 0) {
-            $text_error = $text_error."Дата не может быть в прошлом! ";
+            return "Дата не может быть в прошлом! ";  
         }
-
-        return $text_error;
     }
 }
 
@@ -215,5 +211,55 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
         $error = mysqli_error($connect);
         print ("Ошибка подключения к БД: " . $error);
         exit();
+    }
+}
+
+/**
+ * Добавляет нового пользователя в базу данных
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param sting $email - электронная почта пользователя
+ * @param sting $password - пароль пользователя
+ * @param sting $name - имя пользователя
+ * 
+ */
+
+function add_new_user(mysqli $connect, string $email, string $password, string $name) {
+    $email = mysqli_real_escape_string($connect, $email);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+    $name = mysqli_real_escape_string($connect, $name);
+
+    $sql = "INSERT INTO users SET email = '$email', password = '$password', name='$name';";
+
+    $result = mysqli_query($connect, $sql);
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+        exit();
+    }
+}
+
+/**
+ * Провряет email сначала на валидность, затем на наличие в БД
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param string $email пользователя
+ * 
+ * @return string|null текст ошибки
+ */
+
+function check_email(mysqli $connect, string $email) {
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Введите корректный email! ";
+    }
+
+    $sql = "SELECT email FROM users";
+    $result = mysqli_query($connect, $sql);
+    $emails_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    foreach($emails_list as $existing_email) {
+        if($existing_email['email'] === $email) {
+            return "Пользователь с таким email уже зарегистрирован! ";
+        }
     }
 }
