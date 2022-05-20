@@ -2,7 +2,12 @@
 require_once('helpers.php');
 require_once('functions.php');
 
-$user_id = 1;
+session_start();
+$user_id = 0;
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+}
+
 $show_complete_tasks = rand(0, 1);
 
 $database = require_once('database.php');

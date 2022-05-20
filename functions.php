@@ -43,15 +43,17 @@ function check_important($task_date) {
  * @return string имя пользователя
  */
 function get_user_name(mysqli $connect, int $user_id) {
-    $sql = "SELECT name FROM users WHERE id = $user_id";
-    $result = mysqli_query($connect, $sql);
-    if ($result) {
-        $user = mysqli_fetch_assoc($result);
-    } else {
-        $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+    if ($user_id) {
+        $sql = "SELECT name FROM users WHERE id = $user_id";
+        $result = mysqli_query($connect, $sql);
+        if ($result) {
+            $user = mysqli_fetch_assoc($result);
+        } else {
+            $error = mysqli_error($connect);
+            print ("Ошибка подключения к БД: " . $error);
+        }
+        return $user['name'];
     }
-    return $user['name'];
 }  
 
 /**
@@ -229,7 +231,6 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
     $name = mysqli_real_escape_string($connect, $name);
 
     $sql = "INSERT INTO users SET email = '$email', password = '$password', name='$name';";
-
     $result = mysqli_query($connect, $sql);
     if (!$result) {
         $error = mysqli_error($connect);
@@ -252,10 +253,55 @@ function check_email(mysqli $connect, string $email) {
         return "Введите корректный email! ";
     }
 
-    $sql = "SELECT email FROM users WHERE email = '".$email."';";
+    $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
     $email_in_base = mysqli_fetch_assoc($result);
     if ($email_in_base) {
         return "Пользователь с таким email уже зарегистрирован! "; 
     }       
 }
+
+/**
+ * Сравнивает полученный от пользователя пароль с хэшем из БД
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param int $email email пользователя
+ * @param int $password пароль пользователя
+ * 
+ * @return bool true если пароль совпадает, false если нет
+ */
+function check_password(mysqli $connect, string $email, string $password) {
+    $email = mysqli_real_escape_string($connect, $email);
+    $password = mysqli_real_escape_string($connect, $password);
+
+    $sql = "SELECT password FROM users WHERE email = '$email'";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $password_hash = mysqli_fetch_assoc($result);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    return password_verify($password, $password_hash['password']);
+}
+
+/**
+ * Получает из базы данных id пользователя по его email
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param int $email email пользователя
+ * 
+ * @return int id пользователя
+ */
+function get_user_id(mysqli $connect, string $email) {
+    $email = mysqli_real_escape_string($connect, $email);
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $user = mysqli_fetch_assoc($result);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    return $user['id'];
+} 

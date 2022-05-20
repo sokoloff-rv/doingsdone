@@ -25,7 +25,7 @@ $page_content = include_template('register.php', $page_content_data);
 
 $layout_content_data = [
     'page_content' => $page_content,
-    'user_name' => get_user_name($connect, $user_id), // я так понимаю, что после следующего задания с авторизацией это можно будет наконец-то выпилить, но пока ещё пусть будет
+    'user_name' => get_user_name($connect, $user_id),
     'page_name' => 'Регистрация аккаунта'    
 ];
 $layout_content = include_template('layout.php', $layout_content_data);

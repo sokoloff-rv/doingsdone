@@ -9,15 +9,6 @@ if (isset($selected_project_id)) {
     $visible_tasks = get_all_user_tasks($connect, $user_id);
 }
 
-if (empty($visible_tasks)) {
-    http_response_code(404);
-    $error = ['error' => 'Код ошибки: 404'];
-    $page_content = include_template('error.php', $error);
-    $layout_content = include_template('layout.php', ['page_content' => $page_content]);
-    print($layout_content);
-    exit();
-}
-
 $page_content_data = [
     'projects' => get_user_projects($connect, $user_id),
     'selected_project_id' => $selected_project_id,
@@ -26,6 +17,16 @@ $page_content_data = [
     'show_complete_tasks' => $show_complete_tasks
 ];
 $page_content = include_template('main.php', $page_content_data);
+
+if (!isset($_SESSION['user_id'])) {
+    $page_content = include_template('guest.php');
+}
+
+if (isset($_SESSION['user_id']) && empty($visible_tasks)) {
+    http_response_code(404);
+    $error = ['error' => 'Код ошибки: 404'];
+    $page_content = include_template('error.php', $error);
+}
 
 $layout_content_data = [
     'page_content' => $page_content,
