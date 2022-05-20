@@ -240,19 +240,28 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
 }
 
 /**
- * Провряет email сначала на валидность, затем на наличие в БД
+ * Провряет email на валидность
  *
  * @param bool $connect состояние подключения к БД
  * @param string $email пользователя
  * 
  * @return string|null текст ошибки
  */
-function check_email(mysqli $connect, string $email) {
-
+function check_email_validity(mysqli $connect, string $email) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email! ";
-    }
+    }     
+}
 
+/**
+ * Провряет email на наличие в БД
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param string $email пользователя
+ * 
+ * @return string|null текст ошибки
+ */
+function check_email_availability(mysqli $connect, string $email) {
     $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
     $email_in_base = mysqli_fetch_assoc($result);
@@ -274,15 +283,20 @@ function check_password(mysqli $connect, string $email, string $password) {
     $email = mysqli_real_escape_string($connect, $email);
     $password = mysqli_real_escape_string($connect, $password);
 
-    $sql = "SELECT password FROM users WHERE email = '$email'";
+    $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
-    if ($result) {
-        $password_hash = mysqli_fetch_assoc($result);
-    } else {
-        $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
-    }
-    return password_verify($password, $password_hash['password']);
+    $email_in_base = mysqli_fetch_assoc($result);
+    if ($email_in_base) {
+        $sql = "SELECT password FROM users WHERE email = '$email'";
+        $result = mysqli_query($connect, $sql);
+        if ($result) {
+            $password_hash = mysqli_fetch_assoc($result);
+        } else {
+            $error = mysqli_error($connect);
+            print ("Ошибка подключения к БД: " . $error);
+        }
+        return password_verify($password, $password_hash['password']);
+    }   
 }
 
 /**

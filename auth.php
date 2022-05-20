@@ -5,6 +5,9 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['email'] = is_filled('email');
+    if (!is_filled('email')) {
+        $errors['email'] = check_email_validity($connect, $_POST['email']);
+    }
     $errors['password'] = is_filled('password');
 
     if (empty($errors['email']) && check_password($connect, $_POST['email'], $_POST['password'])) {
@@ -12,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /index.php');
         exit();
     } elseif (!is_filled('password')) {
-        $errors['password'] = "Введен неверный пароль!";
+        $errors['password'] = "Введен неверный пароль или аккаунт не существует!";
     }
 };
 
