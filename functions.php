@@ -223,7 +223,6 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
  * @param sting $name - имя пользователя
  * 
  */
-
 function add_new_user(mysqli $connect, string $email, string $password, string $name) {
     $email = mysqli_real_escape_string($connect, $email);
     $password = password_hash($password, PASSWORD_DEFAULT);
@@ -247,19 +246,16 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
  * 
  * @return string|null текст ошибки
  */
-
 function check_email(mysqli $connect, string $email) {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email! ";
     }
 
-    $sql = "SELECT email FROM users";
+    $sql = "SELECT email FROM users WHERE email = '".$email."';";
     $result = mysqli_query($connect, $sql);
-    $emails_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    foreach($emails_list as $existing_email) {
-        if($existing_email['email'] === $email) {
-            return "Пользователь с таким email уже зарегистрирован! ";
-        }
-    }
+    $email_in_base = mysqli_fetch_assoc($result);
+    if ($email_in_base) {
+        return "Пользователь с таким email уже зарегистрирован! "; 
+    }       
 }

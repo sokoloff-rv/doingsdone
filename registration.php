@@ -5,7 +5,9 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
     $errors['email'] = is_filled('email');
-    $errors['email'] = check_email($connect, $_POST['email']);
+    if (!is_filled('email')) {
+        $errors['email'] = check_email($connect, $_POST['email']);
+    }
     $errors['password'] = is_filled('password');
     $errors['name'] = is_filled('name');
 
