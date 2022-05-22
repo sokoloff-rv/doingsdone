@@ -5,7 +5,12 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
     $errors['email'] = is_filled('email');
-    $errors['email'] = check_email($connect, $_POST['email']);
+    if (!is_filled('email')) {
+        $errors['email'] = check_email_validity($connect, $_POST['email']);
+        if (!check_email_validity($connect, $_POST['email'])) {
+            $errors['email'] = check_email_availability($connect, $_POST['email']);
+        }
+    }
     $errors['password'] = is_filled('password');
     $errors['name'] = is_filled('name');
 
@@ -23,7 +28,7 @@ $page_content = include_template('register.php', $page_content_data);
 
 $layout_content_data = [
     'page_content' => $page_content,
-    'user_name' => get_user_name($connect, $user_id), // я так понимаю, что после следующего задания с авторизацией это можно будет наконец-то выпилить, но пока ещё пусть будет
+    'user_name' => get_user_name($connect, $user_id),
     'page_name' => 'Регистрация аккаунта'    
 ];
 $layout_content = include_template('layout.php', $layout_content_data);
