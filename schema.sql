@@ -29,4 +29,4 @@ CREATE TABLE tasks (
     user_id INT NOT NULL
 );
 
-CREATE INDEX task_title ON tasks(title);
+CREATE FULLTEXT INDEX task_title_search ON tasks(title);

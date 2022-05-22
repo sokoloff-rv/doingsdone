@@ -19,7 +19,7 @@
     <h2 class="content__main-heading">Список задач</h2>
 
     <form class="search-form" action="index.php" method="post" autocomplete="off">
-        <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+        <input class="search-form__input" type="text" name="search" value="<?= htmlspecialchars(get_post_value('search')) ?>" placeholder="Поиск по задачам">
 
         <input class="search-form__submit" type="submit" name="" value="Искать">
     </form>
@@ -37,6 +37,10 @@
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>
+
+    <?php if (htmlspecialchars(get_post_value('search')) && !count($visible_tasks)): ?>
+        <p>Ничего не найдено по вашему запросу</p>
+    <?php endif;?>
 
     <table class="tasks">
         <?php foreach($visible_tasks as $key => $value): ?>

@@ -82,7 +82,7 @@ function get_user_projects(mysqli $connect, int $user_id) {
  * @param bool $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
  * 
- * @return array ассоциативный массив с названиями проектов
+ * @return array ассоциативный массив с задачами
  */
 function get_all_user_tasks(mysqli $connect, int $user_id) {
     $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id";
@@ -103,7 +103,7 @@ function get_all_user_tasks(mysqli $connect, int $user_id) {
  * @param int $project_id идентификатор проекта
  * @param int $user_id идентификатор пользователя
  * 
- * @return array ассоциативный массив с названиями проектов
+ * @return array ассоциативный массив с задачами
  */
 function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id) {
     $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id";
@@ -310,6 +310,7 @@ function check_password(mysqli $connect, string $email, string $password) {
  */
 function get_user_id(mysqli $connect, string $email) {
     $email = mysqli_real_escape_string($connect, $email);
+
     $sql = "SELECT id FROM users WHERE email = '$email'";
     $result = mysqli_query($connect, $sql);
     if ($result) {
@@ -319,4 +320,27 @@ function get_user_id(mysqli $connect, string $email) {
         print ("Ошибка подключения к БД: " . $error);
     }
     return $user['id'];
-} 
+}
+
+/**
+ * Получает из базы данных список задач пользователя, в названии которых есть хотя бы одно слово из поискового запроса
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param int $search_phrase поисковый запрос
+ * @param int $user_id идентификатор пользователя
+ * 
+ * @return array ассоциативный массив с задачами
+ */
+function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $user_id) {
+    $search_phrase = mysqli_real_escape_string($connect, $search_phrase);
+
+    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    return $tasks;
+}
