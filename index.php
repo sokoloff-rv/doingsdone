@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
     $page_content = include_template('guest.php');
 }
 
-if (isset($_SESSION['user_id']) && empty($visible_tasks)) {
+if ($selected_project_id && empty($visible_tasks)) {
     http_response_code(404);
     $error = ['error' => 'Код ошибки: 404'];
     $page_content = include_template('error.php', $error);

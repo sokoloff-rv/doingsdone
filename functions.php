@@ -262,6 +262,8 @@ function check_email_validity(mysqli $connect, string $email) {
  * @return string|null текст ошибки
  */
 function check_email_availability(mysqli $connect, string $email) {
+    $email = mysqli_real_escape_string($connect, $email);
+
     $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
     $email_in_base = mysqli_fetch_assoc($result);
@@ -281,7 +283,6 @@ function check_email_availability(mysqli $connect, string $email) {
  */
 function check_password(mysqli $connect, string $email, string $password) {
     $email = mysqli_real_escape_string($connect, $email);
-    $password = mysqli_real_escape_string($connect, $password);
 
     $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
