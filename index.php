@@ -3,6 +3,7 @@ require_once('init.php');
 
 $selected_project_id = filter_input(INPUT_GET, 'project_id');
 $search_phrase = filter_input(INPUT_GET, 'search');
+$show_complete_tasks = filter_input(INPUT_GET, 'show_completed');
 
 if (isset($selected_project_id)) {
     $visible_tasks = get_user_tasks_by_project($connect, $selected_project_id, $user_id);
