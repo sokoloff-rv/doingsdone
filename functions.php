@@ -85,7 +85,7 @@ function get_user_projects(mysqli $connect, int $user_id) {
  * @return array ассоциативный массив с задачами
  */
 function get_all_user_tasks(mysqli $connect, int $user_id) {
-    $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id ORDER BY t.id DESC";
+    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -106,7 +106,7 @@ function get_all_user_tasks(mysqli $connect, int $user_id) {
  * @return array ассоциативный массив с задачами
  */
 function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id) {
-    $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.id DESC";
+    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -343,4 +343,15 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
         print ("Ошибка подключения к БД: " . $error);
     }
     return $tasks;
+}
+
+//
+function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id) {
+    $sql = "UPDATE tasks SET status = '$task_status' WHERE id ='$task_id' and user_id = '$user_id'";
+    $result = mysqli_query($connect, $sql);
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    header('Location: /index.php');
 }

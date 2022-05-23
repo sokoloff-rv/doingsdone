@@ -45,12 +45,17 @@
     <table class="tasks">
         <?php foreach($visible_tasks as $key => $value): ?>
         <?php if ($value['status'] && !$show_complete_tasks): continue; endif; ?>
-        <tr class="tasks__item task
-        <?php if (check_important($value['deadline'])):?> task--important<?php endif;?>
-        <?php if ($value['status']):?> task--completed<?php endif;?>">
+        <?php $class = "";
+        if (check_important($value['deadline'])) {
+            $class = " task--important";
+        }
+        if ($value['status']) {
+            $class = $class." task--completed";
+        } ?>
+        <tr class="tasks__item task<?= $class ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($value['status']):?>checked<?php endif;?>>
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($value['status']):?>checked<?php endif;?> value="<?= $value['id'] ?>">
                     <span class="checkbox__text"><?= htmlspecialchars($value['title']) ?></span>
                 </label>
             </td>
