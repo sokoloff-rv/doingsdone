@@ -26,10 +26,10 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
+            <a href="/" class="tasks-switch__item <?= !$_GET['deadline'] ? "tasks-switch__item--active" : "" ?>">Все задачи</a>
+            <a href="/index.php?deadline=today" class="tasks-switch__item <?= $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
+            <a href="/index.php?deadline=tomorrow" class="tasks-switch__item <?= $_GET['deadline'] === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
+            <a href="/index.php?deadline=overdue" class="tasks-switch__item <?= $_GET['deadline'] === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">

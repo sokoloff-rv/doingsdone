@@ -5,6 +5,7 @@ $selected_project_id = filter_input(INPUT_GET, 'project_id');
 $search_phrase = filter_input(INPUT_GET, 'search');
 $task_id = filter_input(INPUT_GET, 'task_id');
 $task_status = filter_input(INPUT_GET, 'check');
+$task_deadline = filter_input(INPUT_GET, 'deadline');
 
 if (isset($_GET['show_completed'])) {
     $show_complete_tasks = filter_input(INPUT_GET, 'show_completed');
@@ -17,6 +18,8 @@ if (isset($_GET['show_completed'])) {
 
 if (isset($selected_project_id)) {
     $visible_tasks = get_user_tasks_by_project($connect, $selected_project_id, $user_id);
+} elseif(isset($task_deadline)) {
+    $visible_tasks = get_user_tasks_by_deadline($connect, $task_deadline, $user_id);
 } elseif (strlen($search_phrase)) {
     $visible_tasks = get_user_tasks_by_search($connect, $search_phrase, $user_id);
 } else {
