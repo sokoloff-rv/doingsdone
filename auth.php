@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /index.php');
         exit();
     } elseif (!is_filled('password')) {
-        $errors['password'] = "Введен неверный пароль или аккаунт не существует!";
+        $errors['password'] = "Вы ввели неверный email/пароль";
     }
 };
 

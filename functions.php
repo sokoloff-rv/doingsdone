@@ -350,7 +350,7 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
  *
  * @param bool $connect состояние подключения к БД
  * @param int $task_id иденитификатор задачи
- * @param int $task_status статус задачи
+ * @param int $task_status статус задачи, полученный из GET-параметра check
  * @param int $user_id идентификатор пользователя
  * 
  * @return array ассоциативный массив с задачами
@@ -423,7 +423,7 @@ function is_unique_name(mysqli $connect, string $title, int $user_id) {
  * Получает список задач с заданным сроком окончания
  *
  * @param bool $connect состояние подключения к БД
- * @param int $task_deadline значение GET-параметра deadline
+ * @param string $task_deadline значение GET-параметра deadline
  * @param int $user_id идентификатор пользователя
  * 
  * @return array ассоциативный массив с задачами
