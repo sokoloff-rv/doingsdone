@@ -47,7 +47,7 @@
                 <p>Веб-приложение для удобного ведения списка дел.</p>
             </div>
 
-            <?php if (isset($_SESSION['id'])): ?>
+            <?php if (isset($_SESSION['user_id'])): ?>
                 <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
             <?php endif; ?>
 

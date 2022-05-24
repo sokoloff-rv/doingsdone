@@ -379,3 +379,42 @@ function mark_task_completed(mysqli $connect, int $task_id, int $task_status, in
     }
     header("Location: /index.php");
 }
+
+/**
+ * Добавляет новый проект в базу данных
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param sting $title - название проекта
+ * @param int $user_id - идентификатор пользователя, который создал проект
+ * 
+ */
+function add_new_project(mysqli $connect, string $title, int $user_id) {
+    $title = mysqli_real_escape_string($connect, $title);
+
+    $sql = "INSERT INTO projects SET title = '$title', user_id='$user_id'";
+    $result = mysqli_query($connect, $sql);
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+        exit();
+    }
+}
+
+/**
+ * Проверяет есть ли у пользователя проект с таким же названием
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param sting $title - название проекта
+ * @param int $user_id - идентификатор пользователя, который создал проект
+ * 
+ */
+function is_unique_name(mysqli $connect, string $title, int $user_id) {
+    $title = mysqli_real_escape_string($connect, $title);
+
+    $sql = "SELECT title FROM projects WHERE user_id = '$user_id' and title = '$title';";
+    $result = mysqli_query($connect, $sql);
+    $project_in_base = mysqli_fetch_assoc($result);
+    if ($project_in_base) {
+        return "Проект с таким названием уже есть! "; 
+    }  
+}
