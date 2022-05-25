@@ -7,14 +7,18 @@
  *
  * @return int количество задач в проекте
  */
-function count_tasks($tasks_list, $project_name) {
-    $count = 0;
-    foreach($tasks_list as $key => $value) {
-        if ($value['project'] === $project_name) {
-            $count++;
-        }
+function count_tasks(mysqli $connect, string $project_name, int $user_id) {
+    $project_name = mysqli_real_escape_string($connect, $project_name);
+
+    $sql = "SELECT count(*) FROM tasks t JOIN projects p ON project_id = p.id WHERE p.title = '$project_name' AND p.user_id = $user_id AND status = 0";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $tasks_count = mysqli_fetch_assoc($result);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
     }
-    return $count;
+    return $tasks_count['count(*)'];
 }  
 
 /**
