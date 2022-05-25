@@ -1,0 +1,18 @@
+{
+    "name": "sokoloff-rv/doingsdone",
+    "description": "Учебный проект HTML Academy",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "SokoloffRv\\Doingsdone\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sokoloff-rv"
+        }
+    ],
+    "require": {
+        "symfony/mailer": "^5.4"
+    }
+}

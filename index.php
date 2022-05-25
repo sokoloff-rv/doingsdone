@@ -33,9 +33,10 @@ if (isset($task_id) && isset($task_status)) {
 $page_content_data = [
     'projects' => get_user_projects($connect, $user_id),
     'selected_project_id' => $selected_project_id,
-    'all_tasks' => get_all_user_tasks($connect, $user_id),
     'visible_tasks' => $visible_tasks,
-    'show_complete_tasks' => $show_complete_tasks
+    'show_complete_tasks' => $show_complete_tasks,
+    'connect' => $connect,
+    'user_id' => $user_id
 ];
 $page_content = include_template('main.php', $page_content_data);
 
