@@ -33,7 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $page_content_data = [
     'projects' => $projects_list,
     'all_tasks' => get_all_user_tasks($connect, $user_id),
-    'errors' => $errors
+    'errors' => $errors,
+    'connect' => $connect,
+    'user_id' => $user_id
 ];
 $page_content = include_template('new_task.php', $page_content_data);
 
