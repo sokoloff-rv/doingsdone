@@ -2,7 +2,7 @@
 /**
  * Подсчитывает количество невыполненных задач в проекте
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param string $project_name название проекта
  * @param int $user_id идентификатор пользователя
  *
@@ -42,7 +42,7 @@ function check_important($task_date) {
 /**
  * Получает из базы данных имя пользователя по его id
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
  * 
  * @return string имя пользователя
@@ -64,7 +64,7 @@ function get_user_name(mysqli $connect, int $user_id) {
 /**
  * Получает из базы данных список проектов пользователя по его id
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
  * 
  * @return array ассоциативный массив с названиями проектов
@@ -84,7 +84,7 @@ function get_user_projects(mysqli $connect, int $user_id) {
 /**
  * Получает из базы данных список задач пользователя по его id
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
  * 
  * @return array ассоциативный массив с задачами
@@ -104,7 +104,7 @@ function get_all_user_tasks(mysqli $connect, int $user_id) {
 /**
  * Получает из базы данных список задач пользователя, относящихся к конкретному проекту, по id этого пользователя
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $project_id идентификатор проекта
  * @param int $user_id идентификатор пользователя
  * 
@@ -191,7 +191,7 @@ function is_correct_date($input_name) {
 /**
  * Добавляет новую задачу в базу данных
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param sting $title - заголовок задачи
  * @param sting $filepath - путь к прикрепленному файлу
  * @param sting $deadline - дата окончания задачи
@@ -224,7 +224,7 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
 /**
  * Добавляет нового пользователя в базу данных
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param sting $email - электронная почта пользователя
  * @param sting $password - пароль пользователя
  * @param sting $name - имя пользователя
@@ -247,7 +247,7 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
 /**
  * Провряет email на валидность
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
  * 
  * @return string|null текст ошибки
@@ -261,7 +261,7 @@ function check_email_validity(mysqli $connect, string $email) {
 /**
  * Провряет email на наличие в БД
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
  * 
  * @return string|null текст ошибки
@@ -280,7 +280,7 @@ function check_email_availability(mysqli $connect, string $email) {
 /**
  * Сравнивает полученный от пользователя пароль с хэшем из БД
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $email email пользователя
  * @param int $password пароль пользователя
  * 
@@ -308,7 +308,7 @@ function check_password(mysqli $connect, string $email, string $password) {
 /**
  * Получает из базы данных id пользователя по его email
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $email email пользователя
  * 
  * @return int id пользователя
@@ -330,7 +330,7 @@ function get_user_id(mysqli $connect, string $email) {
 /**
  * Получает из базы данных список задач пользователя, в названии которых есть хотя бы одно слово из поискового запроса
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param string $search_phrase поисковый запрос
  * @param int $user_id идентификатор пользователя
  * 
@@ -353,7 +353,7 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
 /**
  * Отмечает задачу выполненной или не выполненной
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param int $task_id иденитификатор задачи
  * @param int $task_status статус задачи, полученный из GET-параметра check
  * @param int $user_id идентификатор пользователя
@@ -373,7 +373,7 @@ function mark_task_completed(mysqli $connect, int $task_id, int $task_status, in
 /**
  * Добавляет новый проект в базу данных
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param sting $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
  * 
@@ -393,7 +393,7 @@ function add_new_project(mysqli $connect, string $title, int $user_id) {
 /**
  * Проверяет есть ли у пользователя проект с таким же названием
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param sting $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
  * 
@@ -412,7 +412,7 @@ function is_unique_name(mysqli $connect, string $title, int $user_id) {
 /**
  * Получает список задач с заданным сроком окончания
  *
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * @param string $task_deadline значение GET-параметра deadline
  * @param int $user_id идентификатор пользователя
  * 
@@ -448,7 +448,7 @@ function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int 
 /**
  * Получаем задачи запланированные на сегодня и список пользователей 
  * 
- * @param bool $connect состояние подключения к БД
+ * @param mysqli $connect состояние подключения к БД
  * 
  * @return array ассоциативный массив с пользователями и их задачами на сегодня
  */
