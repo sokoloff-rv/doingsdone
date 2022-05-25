@@ -444,6 +444,7 @@ function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int 
  * Получаем задачи запланированные на сегодня и список пользователей 
  * 
  * @param bool $connect состояние подключения к БД
+ * 
  * @return array ассоциативный массив с пользователями и их задачами на сегодня
  */
 function get_users_today_tasks($connect) {
