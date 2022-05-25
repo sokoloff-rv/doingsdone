@@ -11,7 +11,7 @@ $transport = Transport::fromDsn($dsn);
 
 $initial_data = get_users_today_tasks($connect);
 $processed_data = [];
-foreach($initial_data as $user_data) {
+foreach ($initial_data as $user_data) {
     $processed_data[$user_data["id"]]["name"] = $user_data["name"];
     $processed_data[$user_data["id"]]["email"] = $user_data["email"];
     $processed_data[$user_data["id"]]["tasks"][] = [
@@ -20,7 +20,7 @@ foreach($initial_data as $user_data) {
     ];
 }
 
-foreach($processed_data as $data) {
+foreach ($processed_data as $data) {
     $message = new Email();
     $message->to($data['email']);
     $message->from("keks@phpdemo.ru");
@@ -28,7 +28,7 @@ foreach($processed_data as $data) {
     $message_text = "Уважаемый, {$data['name']}.\n";
     if (count($data["tasks"]) === 1) {
         $message_text = $message_text."У вас запланирована задача:\n";
-    } else if (count($data["tasks"]) > 1) {
+    } elseif (count($data["tasks"]) > 1) {
         $message_text = $message_text."У вас запланированы задачи:\n";
     }
     foreach ($data["tasks"] as $task) {

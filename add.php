@@ -4,7 +4,7 @@ require_once('init.php');
 $projects_list = get_user_projects($connect, $user_id);
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['name'] = is_filled('name');
     $errors['project'] = is_project_exist($projects_list, 'project');
     $errors['date'] = is_correct_date('date');
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
         $file_name = 'file-' . uniqid() . '_' . $_FILES['file']['name'];
         $file_path = __DIR__ . '/uploads/';
-        $file_url = '/uploads/' . $file_name;    
+        $file_url = '/uploads/' . $file_name;
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
         $file_link = '/uploads/' . $file_name;
     }
@@ -44,7 +44,7 @@ if (!isset($_SESSION['user_id'])) {
 $layout_content_data = [
     'page_content' => $page_content,
     'user_name' => get_user_name($connect, $user_id),
-    'page_name' => 'Добавление задачи'    
+    'page_name' => 'Добавление задачи'
 ];
 $layout_content = include_template('layout.php', $layout_content_data);
 
