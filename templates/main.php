@@ -12,7 +12,7 @@
         </ul>
     </nav>
 
-    <a class="button button--transparent button--plus content__side-button" href="pages/form-project.html" target="project_add">Добавить проект</a>
+    <a class="button button--transparent button--plus content__side-button" href="/add-project.php" target="project_add">Добавить проект</a>
 </section>
 
 <main class="content__main">
@@ -26,10 +26,10 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
+            <a href="/" class="tasks-switch__item <?= !$_GET['deadline'] ? "tasks-switch__item--active" : "" ?>">Все задачи</a>
+            <a href="/index.php?deadline=today" class="tasks-switch__item <?= $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
+            <a href="/index.php?deadline=tomorrow" class="tasks-switch__item <?= $_GET['deadline'] === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
+            <a href="/index.php?deadline=overdue" class="tasks-switch__item <?= $_GET['deadline'] === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">
@@ -45,12 +45,17 @@
     <table class="tasks">
         <?php foreach($visible_tasks as $key => $value): ?>
         <?php if ($value['status'] && !$show_complete_tasks): continue; endif; ?>
-        <tr class="tasks__item task
-        <?php if (check_important($value['deadline'])):?> task--important<?php endif;?>
-        <?php if ($value['status']):?> task--completed<?php endif;?>">
+        <?php $class = "";
+        if (check_important($value['deadline'])) {
+            $class = " task--important";
+        }
+        if ($value['status']) {
+            $class = $class." task--completed";
+        } ?>
+        <tr class="tasks__item task<?= $class ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($value['status']):?>checked<?php endif;?>>
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($value['status']):?>checked<?php endif;?> value="<?= $value['id'] ?>">
                     <span class="checkbox__text"><?= htmlspecialchars($value['title']) ?></span>
                 </label>
             </td>

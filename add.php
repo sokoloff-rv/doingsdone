@@ -37,6 +37,10 @@ $page_content_data = [
 ];
 $page_content = include_template('new_task.php', $page_content_data);
 
+if (!isset($_SESSION['user_id'])) {
+    $page_content = include_template('guest.php');
+}
+
 $layout_content_data = [
     'page_content' => $page_content,
     'user_name' => get_user_name($connect, $user_id),

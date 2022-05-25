@@ -85,7 +85,7 @@ function get_user_projects(mysqli $connect, int $user_id) {
  * @return array ассоциативный массив с задачами
  */
 function get_all_user_tasks(mysqli $connect, int $user_id) {
-    $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id";
+    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -106,7 +106,7 @@ function get_all_user_tasks(mysqli $connect, int $user_id) {
  * @return array ассоциативный массив с задачами
  */
 function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id) {
-    $sql = "SELECT status, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id";
+    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -326,7 +326,7 @@ function get_user_id(mysqli $connect, string $email) {
  * Получает из базы данных список задач пользователя, в названии которых есть хотя бы одно слово из поискового запроса
  *
  * @param bool $connect состояние подключения к БД
- * @param int $search_phrase поисковый запрос
+ * @param string $search_phrase поисковый запрос
  * @param int $user_id идентификатор пользователя
  * 
  * @return array ассоциативный массив с задачами
@@ -334,7 +334,117 @@ function get_user_id(mysqli $connect, string $email) {
 function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $user_id) {
     $search_phrase = mysqli_real_escape_string($connect, $search_phrase);
 
-    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id";
+    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id ORDER BY id DESC";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    return $tasks;
+}
+
+/**
+ * Отмечает задачу выполненной или не выполненной
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param int $task_id иденитификатор задачи
+ * @param int $task_status статус задачи, полученный из GET-параметра check
+ * @param int $user_id идентификатор пользователя
+ * 
+ * @return array ассоциативный массив с задачами
+ */
+function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id) {
+    /* По условиям ТЗ нужно получить из базы задачу по её идентификатору, составить и выполнить SQL запрос, который инвертирует статус задачи (выполнена → не выполнена, не выполнена → выполнена). Я это сделал, чтобы выполнить условия ТЗ, но пока закомментировал, так как такой подход кажется избыточным. Если раскомментировать, то в SQL-запросе UPDATE ниже нужно заменить $task_status на $new_status.
+    
+    $sql = "SELECT status FROM tasks WHERE id ='$task_id' AND user_id = '$user_id'";
+    $result = mysqli_query($connect, $sql);
+    if ($result) {
+        $status = mysqli_fetch_assoc($result);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    if ($status['status']) {
+        $new_status = 0;
+    } else {
+        $new_status = 1;
+    } */
+    $sql = "UPDATE tasks SET status = '$task_status' WHERE id ='$task_id' AND user_id = '$user_id'";
+    $result = mysqli_query($connect, $sql);
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+    }
+    header("Location: /index.php");
+}
+
+/**
+ * Добавляет новый проект в базу данных
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param sting $title - название проекта
+ * @param int $user_id - идентификатор пользователя, который создал проект
+ * 
+ */
+function add_new_project(mysqli $connect, string $title, int $user_id) {
+    $title = mysqli_real_escape_string($connect, $title);
+
+    $sql = "INSERT INTO projects SET title = '$title', user_id='$user_id'";
+    $result = mysqli_query($connect, $sql);
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print ("Ошибка подключения к БД: " . $error);
+        exit();
+    }
+}
+
+/**
+ * Проверяет есть ли у пользователя проект с таким же названием
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param sting $title - название проекта
+ * @param int $user_id - идентификатор пользователя, который создал проект
+ * 
+ */
+function is_unique_name(mysqli $connect, string $title, int $user_id) {
+    $title = mysqli_real_escape_string($connect, $title);
+
+    $sql = "SELECT title FROM projects WHERE user_id = '$user_id' AND title = '$title';";
+    $result = mysqli_query($connect, $sql);
+    $project_in_base = mysqli_fetch_assoc($result);
+    if ($project_in_base) {
+        return "Проект с таким названием уже есть! "; 
+    }  
+}
+
+/**
+ * Получает список задач с заданным сроком окончания
+ *
+ * @param bool $connect состояние подключения к БД
+ * @param string $task_deadline значение GET-параметра deadline
+ * @param int $user_id идентификатор пользователя
+ * 
+ * @return array ассоциативный массив с задачами
+ */
+function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int $user_id) {
+    $task_deadline = mysqli_real_escape_string($connect, $task_deadline);
+
+    $deadline = "";
+    if ($task_deadline === "today") {
+        $deadline = date("Y-m-d", strtotime('00:00:00'));
+    } elseif ($task_deadline === "tomorrow") {
+        $deadline = date("Y-m-d", strtotime('+1 day 00:00:00'));
+    }
+    if ($task_deadline === "today" || $task_deadline === "tomorrow") {
+        $sql = "SELECT * FROM tasks WHERE deadline = '$deadline' AND user_id = $user_id ORDER BY id DESC";
+    } elseif ($task_deadline === "overdue") {
+        $today = date("Y-m-d", strtotime('00:00:00'));
+        $sql = "SELECT * FROM tasks WHERE DATE(deadline) < '$today' AND status = 0 AND user_id = $user_id ORDER BY deadline DESC";
+    } else {
+        return [];
+    }
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);

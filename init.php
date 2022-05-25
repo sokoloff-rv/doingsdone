@@ -8,8 +8,6 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 }
 
-$show_complete_tasks = rand(0, 1);
-
 $database = require_once('database.php');
 $connect = mysqli_connect($database['host'], $database['user'], $database['password'], $database['name']);
 mysqli_set_charset($connect, "utf8");
