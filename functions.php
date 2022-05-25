@@ -439,3 +439,22 @@ function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int 
     }
     return $tasks;
 }
+
+/**
+ * Получаем задачи запланированные на сегодня и список пользователей 
+ * 
+ * @param bool $connect состояние подключения к БД
+ * @return array ассоциативный массив с пользователями и их задачами на сегодня
+ */
+function get_users_today_tasks($connect) {
+    $sql = "SELECT u.id, u.email, u.name, t.title, t.deadline FROM users u JOIN tasks t ON t.user_id = u.id WHERE t.status = '0' AND t.deadline = CURRENT_DATE()";
+    $result = mysqli_query($connect, $sql);
+
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($connect);
+        print ("Ошибка MySQL" . $error);
+    }
+    return $tasks;
+}
