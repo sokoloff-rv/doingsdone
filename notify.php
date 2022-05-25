@@ -20,24 +20,22 @@ foreach($initial_data as $user_data) {
     ];
 }
 
-if (isset($processed_data)) {
-    foreach($processed_data as $data) {
-        $message = new Email();
-        $message->to($data['email']);
-        $message->from("keks@phpdemo.ru");
-        $message->subject("Уведомление от сервиса «Дела в порядке»");
-        $message_text = "Уважаемый, {$data['name']}.\n";
-        if (count($data["tasks"]) === 1) {
-            $message_text = $message_text."У вас запланирована задача:\n";
-        } else if (count($data["tasks"]) > 1) {
-            $message_text = $message_text."У вас запланированы задачи:\n";
-        }
-        foreach ($data["tasks"] as $task) {
-            $task["deadline"] = date("d.m.Y");
-            $message_text = $message_text."- {$task['title']} на {$task['deadline']}.\n";
-        }
-        $message->text($message_text);
-        $mailer = new Mailer($transport);
-        $mailer->send($message);
+foreach($processed_data as $data) {
+    $message = new Email();
+    $message->to($data['email']);
+    $message->from("keks@phpdemo.ru");
+    $message->subject("Уведомление от сервиса «Дела в порядке»");
+    $message_text = "Уважаемый, {$data['name']}.\n";
+    if (count($data["tasks"]) === 1) {
+        $message_text = $message_text."У вас запланирована задача:\n";
+    } else if (count($data["tasks"]) > 1) {
+        $message_text = $message_text."У вас запланированы задачи:\n";
     }
+    foreach ($data["tasks"] as $task) {
+        $task["deadline"] = date("d.m.Y");
+        $message_text = $message_text."- {$task['title']} на {$task['deadline']}.\n";
+    }
+    $message->text($message_text);
+    $mailer = new Mailer($transport);
+    $mailer->send($message);
 }
