@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 };
 
 $page_content_data = [
-    'errors' => $errors  
+    'errors' => $errors
 ];
 $page_content = include_template('auth.php', $page_content_data);
 
 $layout_content_data = [
     'page_content' => $page_content,
-    'page_name' => 'Авторизация'    
+    'page_name' => 'Авторизация'
 ];
 $layout_content = include_template('layout.php', $layout_content_data);
 

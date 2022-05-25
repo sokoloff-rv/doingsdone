@@ -8,7 +8,8 @@
  *
  * @return int количество задач в проекте
  */
-function count_tasks(mysqli $connect, string $project_name, int $user_id) {
+function count_tasks(mysqli $connect, string $project_name, int $user_id)
+{
     $project_name = mysqli_real_escape_string($connect, $project_name);
 
     $sql = "SELECT count(*) FROM tasks t JOIN projects p ON project_id = p.id WHERE p.title = '$project_name' AND p.user_id = $user_id AND status = 0";
@@ -17,10 +18,10 @@ function count_tasks(mysqli $connect, string $project_name, int $user_id) {
         $tasks_count = mysqli_fetch_assoc($result);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $tasks_count['count(*)'];
-}  
+}
 
 /**
  * Определяет считать ли задачу важной (до конца выплнения осталось меньше 24 часов) или нет
@@ -29,7 +30,8 @@ function count_tasks(mysqli $connect, string $project_name, int $user_id) {
  *
  * @return bool true если задача важная, false если нет
  */
-function check_important($task_date) {
+function check_important($task_date)
+{
     if ($task_date) {
         $actual_timestamp = time();
         $task_timestamp = strtotime($task_date);
@@ -44,10 +46,11 @@ function check_important($task_date) {
  *
  * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return string имя пользователя
  */
-function get_user_name(mysqli $connect, int $user_id) {
+function get_user_name(mysqli $connect, int $user_id)
+{
     if ($user_id) {
         $sql = "SELECT name FROM users WHERE id = $user_id";
         $result = mysqli_query($connect, $sql);
@@ -55,51 +58,53 @@ function get_user_name(mysqli $connect, int $user_id) {
             $user = mysqli_fetch_assoc($result);
         } else {
             $error = mysqli_error($connect);
-            print ("Ошибка подключения к БД: " . $error);
+            print("Ошибка подключения к БД: " . $error);
         }
         return $user['name'];
     }
-}  
+}
 
 /**
  * Получает из базы данных список проектов пользователя по его id
  *
  * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с названиями проектов
  */
-function get_user_projects(mysqli $connect, int $user_id) {
+function get_user_projects(mysqli $connect, int $user_id)
+{
     $sql = "SELECT id, title FROM projects WHERE user_id = $user_id";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $projects;
-}  
+}
 
 /**
  * Получает из базы данных список задач пользователя по его id
  *
  * @param mysqli $connect состояние подключения к БД
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с задачами
  */
-function get_all_user_tasks(mysqli $connect, int $user_id) {
+function get_all_user_tasks(mysqli $connect, int $user_id)
+{
     $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $tasks;
-}  
+}
 
 /**
  * Получает из базы данных список задач пользователя, относящихся к конкретному проекту, по id этого пользователя
@@ -107,17 +112,18 @@ function get_all_user_tasks(mysqli $connect, int $user_id) {
  * @param mysqli $connect состояние подключения к БД
  * @param int $project_id идентификатор проекта
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с задачами
  */
-function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id) {
+function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id)
+{
     $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.id DESC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $tasks;
 }
@@ -126,10 +132,11 @@ function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_i
  * Возвращает значение поля из отправленной формы
  *
  * @param string $input_name имя поля
- * 
+ *
  * @return string значение поля
  */
-function get_post_value($input_name) {
+function get_post_value($input_name)
+{
     return $_POST[$input_name] ?? "";
 }
 
@@ -137,10 +144,11 @@ function get_post_value($input_name) {
  * Провряет заполнено ли поле в форме
  *
  * @param string $input_name имя поля
- * 
+ *
  * @return string|null текст ошибки
  */
-function is_filled($input_name) {
+function is_filled($input_name)
+{
     if (empty($_POST[$input_name])) {
         return "Это поле не может быть пустым! ";
     }
@@ -151,12 +159,13 @@ function is_filled($input_name) {
  *
  * @param array $projects массив с id всех проектов пользователя
  * @param string $input_name имя поля
- * 
+ *
  * @return string|null текст ошибки
  */
-function is_project_exist($projects, $input_name) {
+function is_project_exist($projects, $input_name)
+{
     $project_exists = false;
-    foreach($projects as $project) {
+    foreach ($projects as $project) {
         if ($project['id'] === $_POST[$input_name]) {
             $project_exists = true;
         }
@@ -170,20 +179,20 @@ function is_project_exist($projects, $input_name) {
  * Провряет поле даты в форме на соответствие формату и актуальность
  *
  * @param string $input_name имя поля
- * 
+ *
  * @return string|null текст ошибки
  */
-function is_correct_date($input_name) {
+function is_correct_date($input_name)
+{
     if (!empty($_POST[$input_name])) {
-
         if (!is_date_valid($_POST[$input_name])) {
-            return "Введите дату в формате ГГГГ-ММ-ДД! "; 
+            return "Введите дату в формате ГГГГ-ММ-ДД! ";
         }
 
         $task_date = $_POST[$input_name];
         $actual_date = date('Y-m-d');
         if ((strtotime($actual_date) - strtotime($task_date)) / 86400 > 0) {
-            return "Дата не может быть в прошлом! ";  
+            return "Дата не может быть в прошлом! ";
         }
     }
 }
@@ -197,9 +206,10 @@ function is_correct_date($input_name) {
  * @param sting $deadline - дата окончания задачи
  * @param int $project_id - id проекта, к которому относится задача
  * @param int $user_id - id пользователя, который создал задачу
- * 
+ *
  */
-function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string $deadline, int $project_id, int $user_id) {
+function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string $deadline, int $project_id, int $user_id)
+{
     $title = mysqli_real_escape_string($connect, $title);
     $filepath = mysqli_real_escape_string($connect, $filepath);
     $deadline = mysqli_real_escape_string($connect, $deadline);
@@ -216,7 +226,7 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
     $result = mysqli_query($connect, $sql);
     if (!$result) {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
         exit();
     }
 }
@@ -228,9 +238,10 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
  * @param sting $email - электронная почта пользователя
  * @param sting $password - пароль пользователя
  * @param sting $name - имя пользователя
- * 
+ *
  */
-function add_new_user(mysqli $connect, string $email, string $password, string $name) {
+function add_new_user(mysqli $connect, string $email, string $password, string $name)
+{
     $email = mysqli_real_escape_string($connect, $email);
     $password = password_hash($password, PASSWORD_DEFAULT);
     $name = mysqli_real_escape_string($connect, $name);
@@ -239,7 +250,7 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
     $result = mysqli_query($connect, $sql);
     if (!$result) {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
         exit();
     }
 }
@@ -249,13 +260,14 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
  *
  * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
- * 
+ *
  * @return string|null текст ошибки
  */
-function check_email_validity(mysqli $connect, string $email) {
+function check_email_validity(mysqli $connect, string $email)
+{
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email! ";
-    }     
+    }
 }
 
 /**
@@ -263,18 +275,19 @@ function check_email_validity(mysqli $connect, string $email) {
  *
  * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
- * 
+ *
  * @return string|null текст ошибки
  */
-function check_email_availability(mysqli $connect, string $email) {
+function check_email_availability(mysqli $connect, string $email)
+{
     $email = mysqli_real_escape_string($connect, $email);
 
     $sql = "SELECT email FROM users WHERE email = '$email';";
     $result = mysqli_query($connect, $sql);
     $email_in_base = mysqli_fetch_assoc($result);
     if ($email_in_base) {
-        return "Пользователь с таким email уже зарегистрирован! "; 
-    }       
+        return "Пользователь с таким email уже зарегистрирован! ";
+    }
 }
 
 /**
@@ -283,10 +296,11 @@ function check_email_availability(mysqli $connect, string $email) {
  * @param mysqli $connect состояние подключения к БД
  * @param int $email email пользователя
  * @param int $password пароль пользователя
- * 
+ *
  * @return bool true если пароль совпадает, false если нет
  */
-function check_password(mysqli $connect, string $email, string $password) {
+function check_password(mysqli $connect, string $email, string $password)
+{
     $email = mysqli_real_escape_string($connect, $email);
 
     $sql = "SELECT email FROM users WHERE email = '$email';";
@@ -299,10 +313,10 @@ function check_password(mysqli $connect, string $email, string $password) {
             $password_hash = mysqli_fetch_assoc($result);
         } else {
             $error = mysqli_error($connect);
-            print ("Ошибка подключения к БД: " . $error);
+            print("Ошибка подключения к БД: " . $error);
         }
         return password_verify($password, $password_hash['password']);
-    }   
+    }
 }
 
 /**
@@ -310,10 +324,11 @@ function check_password(mysqli $connect, string $email, string $password) {
  *
  * @param mysqli $connect состояние подключения к БД
  * @param int $email email пользователя
- * 
+ *
  * @return int id пользователя
  */
-function get_user_id(mysqli $connect, string $email) {
+function get_user_id(mysqli $connect, string $email)
+{
     $email = mysqli_real_escape_string($connect, $email);
 
     $sql = "SELECT id FROM users WHERE email = '$email'";
@@ -322,7 +337,7 @@ function get_user_id(mysqli $connect, string $email) {
         $user = mysqli_fetch_assoc($result);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $user['id'];
 }
@@ -333,10 +348,11 @@ function get_user_id(mysqli $connect, string $email) {
  * @param mysqli $connect состояние подключения к БД
  * @param string $search_phrase поисковый запрос
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с задачами
  */
-function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $user_id) {
+function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $user_id)
+{
     $search_phrase = mysqli_real_escape_string($connect, $search_phrase);
 
     $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id ORDER BY id DESC";
@@ -345,7 +361,7 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $tasks;
 }
@@ -357,15 +373,16 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
  * @param int $task_id иденитификатор задачи
  * @param int $task_status статус задачи, полученный из GET-параметра check
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с задачами
  */
-function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id) {
+function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id)
+{
     $sql = "UPDATE tasks SET status = '$task_status' WHERE id ='$task_id' AND user_id = '$user_id'";
     $result = mysqli_query($connect, $sql);
     if (!$result) {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     header("Location: /index.php");
 }
@@ -376,16 +393,17 @@ function mark_task_completed(mysqli $connect, int $task_id, int $task_status, in
  * @param mysqli $connect состояние подключения к БД
  * @param sting $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
- * 
+ *
  */
-function add_new_project(mysqli $connect, string $title, int $user_id) {
+function add_new_project(mysqli $connect, string $title, int $user_id)
+{
     $title = mysqli_real_escape_string($connect, $title);
 
     $sql = "INSERT INTO projects SET title = '$title', user_id='$user_id'";
     $result = mysqli_query($connect, $sql);
     if (!$result) {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
         exit();
     }
 }
@@ -396,17 +414,18 @@ function add_new_project(mysqli $connect, string $title, int $user_id) {
  * @param mysqli $connect состояние подключения к БД
  * @param sting $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
- * 
+ *
  */
-function is_unique_name(mysqli $connect, string $title, int $user_id) {
+function is_unique_name(mysqli $connect, string $title, int $user_id)
+{
     $title = mysqli_real_escape_string($connect, $title);
 
     $sql = "SELECT title FROM projects WHERE user_id = '$user_id' AND title = '$title';";
     $result = mysqli_query($connect, $sql);
     $project_in_base = mysqli_fetch_assoc($result);
     if ($project_in_base) {
-        return "Проект с таким названием уже есть! "; 
-    }  
+        return "Проект с таким названием уже есть! ";
+    }
 }
 
 /**
@@ -415,10 +434,11 @@ function is_unique_name(mysqli $connect, string $title, int $user_id) {
  * @param mysqli $connect состояние подключения к БД
  * @param string $task_deadline значение GET-параметра deadline
  * @param int $user_id идентификатор пользователя
- * 
+ *
  * @return array ассоциативный массив с задачами
  */
-function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int $user_id) {
+function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int $user_id)
+{
     $task_deadline = mysqli_real_escape_string($connect, $task_deadline);
 
     $deadline = "";
@@ -440,19 +460,20 @@ function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int 
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
+        print("Ошибка подключения к БД: " . $error);
     }
     return $tasks;
 }
 
 /**
- * Получаем задачи запланированные на сегодня и список пользователей 
- * 
+ * Получаем задачи запланированные на сегодня и список пользователей
+ *
  * @param mysqli $connect состояние подключения к БД
- * 
+ *
  * @return array ассоциативный массив с пользователями и их задачами на сегодня
  */
-function get_users_today_tasks($connect) {
+function get_users_today_tasks($connect)
+{
     $today = date("Y-m-d", strtotime('00:00:00'));
     $sql = "SELECT u.id, u.email, u.name, t.title, t.deadline FROM users u JOIN tasks t ON t.user_id = u.id WHERE t.status = '0' AND t.deadline = '$today'";
     $result = mysqli_query($connect, $sql);
@@ -460,7 +481,7 @@ function get_users_today_tasks($connect) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($connect);
-        print ("Ошибка MySQL" . $error);
+        print("Ошибка MySQL" . $error);
     }
     return $tasks;
 }

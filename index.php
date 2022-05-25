@@ -18,7 +18,7 @@ if (isset($_GET['show_completed'])) {
 
 if (isset($selected_project_id)) {
     $visible_tasks = get_user_tasks_by_project($connect, $selected_project_id, $user_id);
-} elseif(isset($task_deadline)) {
+} elseif (isset($task_deadline)) {
     $visible_tasks = get_user_tasks_by_deadline($connect, $task_deadline, $user_id);
 } elseif (strlen($search_phrase)) {
     $visible_tasks = get_user_tasks_by_search($connect, $search_phrase, $user_id);
@@ -53,7 +53,7 @@ if ($selected_project_id && empty($visible_tasks)) {
 $layout_content_data = [
     'page_content' => $page_content,
     'user_name' => get_user_name($connect, $user_id),
-    'page_name' => 'Дела в порядке'    
+    'page_name' => 'Дела в порядке'
 ];
 $layout_content = include_template('layout.php', $layout_content_data);
 
