@@ -356,21 +356,6 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
  * @return array ассоциативный массив с задачами
  */
 function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id) {
-    /* По условиям ТЗ нужно получить из базы задачу по её идентификатору, составить и выполнить SQL запрос, который инвертирует статус задачи (выполнена → не выполнена, не выполнена → выполнена). Я это сделал, чтобы выполнить условия ТЗ, но пока закомментировал, так как такой подход кажется избыточным. Если раскомментировать, то в SQL-запросе UPDATE ниже нужно заменить $task_status на $new_status.
-    
-    $sql = "SELECT status FROM tasks WHERE id ='$task_id' AND user_id = '$user_id'";
-    $result = mysqli_query($connect, $sql);
-    if ($result) {
-        $status = mysqli_fetch_assoc($result);
-    } else {
-        $error = mysqli_error($connect);
-        print ("Ошибка подключения к БД: " . $error);
-    }
-    if ($status['status']) {
-        $new_status = 0;
-    } else {
-        $new_status = 1;
-    } */
     $sql = "UPDATE tasks SET status = '$task_status' WHERE id ='$task_id' AND user_id = '$user_id'";
     $result = mysqli_query($connect, $sql);
     if (!$result) {
