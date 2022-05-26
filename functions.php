@@ -422,6 +422,7 @@ function add_new_project(mysqli $connect, string $title, int $user_id)
  * @param string $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
  *
+ * @return string|null текст ошибки
  */
 function is_unique_name(mysqli $connect, string $title, int $user_id)
 {
@@ -433,6 +434,7 @@ function is_unique_name(mysqli $connect, string $title, int $user_id)
     if ($project_in_base) {
         return "Проект с таким названием уже есть! ";
     }
+    return null;
 }
 
 /**
