@@ -4,7 +4,7 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($projects as $project): ?>
-            <li class="main-navigation__list-item <?php if (($selected_project_id) === $project['id']):?>main-navigation__list-item--active<?php endif;?>">
+            <li class="main-navigation__list-item <?php if ($selected_project_id === $project['id']):?>main-navigation__list-item--active<?php endif;?>">
                 <a class="main-navigation__list-item-link" href="/index.php?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
                 <span class="main-navigation__list-item-count"><?= count_tasks($connect, $project['title'], $user_id); ?></span>
             </li>
@@ -26,10 +26,10 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item <?= !$_GET['deadline'] ? "tasks-switch__item--active" : "" ?>">Все задачи</a>
-            <a href="/index.php?deadline=today" class="tasks-switch__item <?= $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
-            <a href="/index.php?deadline=tomorrow" class="tasks-switch__item <?= $_GET['deadline'] === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
-            <a href="/index.php?deadline=overdue" class="tasks-switch__item <?= $_GET['deadline'] === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
+            <a href="/" class="tasks-switch__item <?= !isset($_GET['deadline']) ? "tasks-switch__item--active" : "" ?>">Все задачи</a>
+            <a href="/index.php?deadline=today" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
+            <a href="/index.php?deadline=tomorrow" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
+            <a href="/index.php?deadline=overdue" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">

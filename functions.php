@@ -24,7 +24,7 @@ function count_tasks(mysqli $connect, string $project_name, int $user_id)
 }
 
 /**
- * Определяет считать ли задачу важной (до конца выплнения осталось меньше 24 часов) или нет
+ * Определяет считать ли задачу важной (до конца выполнения осталось меньше 24 часов) или нет
  *
  * @param string $task_date дата окончания задачи
  *
@@ -39,6 +39,7 @@ function check_important($task_date)
         $remainder_in_hours = floor($remainder_in_seconds / 3600);
         return $remainder_in_hours < 24;
     }
+    return false;
 }
 
 /**
@@ -62,6 +63,7 @@ function get_user_name(mysqli $connect, int $user_id)
         }
         return $user['name'];
     }
+    return "";
 }
 
 /**
@@ -141,7 +143,7 @@ function get_post_value($input_name)
 }
 
 /**
- * Провряет заполнено ли поле в форме
+ * Проверяет заполнено ли поле в форме
  *
  * @param string $input_name имя поля
  *
@@ -152,10 +154,11 @@ function is_filled($input_name)
     if (empty($_POST[$input_name])) {
         return "Это поле не может быть пустым! ";
     }
+    return null;
 }
 
 /**
- * Провряет существование проекта по его id, полученному из поля формы
+ * Проверяет существование проекта по его id, полученному из поля формы
  *
  * @param array $projects массив с id всех проектов пользователя
  * @param string $input_name имя поля
@@ -173,10 +176,11 @@ function is_project_exist($projects, $input_name)
     if (!$project_exists) {
         return "Проект должен быть существующим! ";
     }
+    return null;
 }
 
 /**
- * Провряет поле даты в форме на соответствие формату и актуальность
+ * Проверяет поле даты в форме на соответствие формату и актуальность
  *
  * @param string $input_name имя поля
  *
@@ -195,15 +199,16 @@ function is_correct_date($input_name)
             return "Дата не может быть в прошлом! ";
         }
     }
+    return null;
 }
 
 /**
  * Добавляет новую задачу в базу данных
  *
  * @param mysqli $connect состояние подключения к БД
- * @param sting $title - заголовок задачи
- * @param sting $filepath - путь к прикрепленному файлу
- * @param sting $deadline - дата окончания задачи
+ * @param string $title - заголовок задачи
+ * @param string $filepath - путь к прикрепленному файлу
+ * @param string $deadline - дата окончания задачи
  * @param int $project_id - id проекта, к которому относится задача
  * @param int $user_id - id пользователя, который создал задачу
  *
@@ -235,9 +240,9 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
  * Добавляет нового пользователя в базу данных
  *
  * @param mysqli $connect состояние подключения к БД
- * @param sting $email - электронная почта пользователя
- * @param sting $password - пароль пользователя
- * @param sting $name - имя пользователя
+ * @param string $email - электронная почта пользователя
+ * @param string $password - пароль пользователя
+ * @param string $name - имя пользователя
  *
  */
 function add_new_user(mysqli $connect, string $email, string $password, string $name)
@@ -256,7 +261,7 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
 }
 
 /**
- * Провряет email на валидность
+ * Проверяет email на валидность
  *
  * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
@@ -268,10 +273,11 @@ function check_email_validity(mysqli $connect, string $email)
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email! ";
     }
+    return null;
 }
 
 /**
- * Провряет email на наличие в БД
+ * Проверяет email на наличие в БД
  *
  * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
@@ -288,14 +294,15 @@ function check_email_availability(mysqli $connect, string $email)
     if ($email_in_base) {
         return "Пользователь с таким email уже зарегистрирован! ";
     }
+    return null;
 }
 
 /**
  * Сравнивает полученный от пользователя пароль с хэшем из БД
  *
  * @param mysqli $connect состояние подключения к БД
- * @param int $email email пользователя
- * @param int $password пароль пользователя
+ * @param string $email email пользователя
+ * @param string $password пароль пользователя
  *
  * @return bool true если пароль совпадает, false если нет
  */
@@ -317,13 +324,14 @@ function check_password(mysqli $connect, string $email, string $password)
         }
         return password_verify($password, $password_hash['password']);
     }
+    return null;
 }
 
 /**
  * Получает из базы данных id пользователя по его email
  *
  * @param mysqli $connect состояние подключения к БД
- * @param int $email email пользователя
+ * @param string $email email пользователя
  *
  * @return int id пользователя
  */
@@ -370,11 +378,10 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
  * Отмечает задачу выполненной или не выполненной
  *
  * @param mysqli $connect состояние подключения к БД
- * @param int $task_id иденитификатор задачи
+ * @param int $task_id идентификатор задачи
  * @param int $task_status статус задачи, полученный из GET-параметра check
  * @param int $user_id идентификатор пользователя
  *
- * @return array ассоциативный массив с задачами
  */
 function mark_task_completed(mysqli $connect, int $task_id, int $task_status, int $user_id)
 {
@@ -391,7 +398,7 @@ function mark_task_completed(mysqli $connect, int $task_id, int $task_status, in
  * Добавляет новый проект в базу данных
  *
  * @param mysqli $connect состояние подключения к БД
- * @param sting $title - название проекта
+ * @param string $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
  *
  */
@@ -412,7 +419,7 @@ function add_new_project(mysqli $connect, string $title, int $user_id)
  * Проверяет есть ли у пользователя проект с таким же названием
  *
  * @param mysqli $connect состояние подключения к БД
- * @param sting $title - название проекта
+ * @param string $title - название проекта
  * @param int $user_id - идентификатор пользователя, который создал проект
  *
  */
