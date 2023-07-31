@@ -6,6 +6,8 @@ $search_phrase = filter_input(INPUT_GET, 'search');
 $task_id = filter_input(INPUT_GET, 'task_id');
 $task_status = filter_input(INPUT_GET, 'check');
 $task_deadline = filter_input(INPUT_GET, 'deadline');
+$user_projects = get_user_projects($connect, $user_id);
+$user_projects_ids = array_column($user_projects, 'id');
 
 if (isset($_GET['show_completed'])) {
     $show_complete_tasks = filter_input(INPUT_GET, 'show_completed');
@@ -31,7 +33,7 @@ if (isset($task_id) && isset($task_status)) {
 }
 
 $page_content_data = [
-    'projects' => get_user_projects($connect, $user_id),
+    'projects' => $user_projects,
     'selected_project_id' => $selected_project_id,
     'visible_tasks' => $visible_tasks,
     'show_complete_tasks' => $show_complete_tasks,
@@ -44,9 +46,9 @@ if (!isset($_SESSION['user_id'])) {
     $page_content = include_template('guest.php');
 }
 
-if ($selected_project_id && empty($visible_tasks)) {
+if ($selected_project_id && !in_array($selected_project_id, $user_projects_ids)) {
     http_response_code(404);
-    $error = ['error' => 'Код ошибки: 404'];
+    $error = ['error' => 'Такой страницы не существует'];
     $page_content = include_template('error.php', $error);
 }
 
