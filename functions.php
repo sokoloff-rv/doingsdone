@@ -119,7 +119,7 @@ function get_all_user_tasks(mysqli $connect, int $user_id)
  */
 function get_user_tasks_by_project(mysqli $connect, int $project_id, int $user_id)
 {
-    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.id DESC";
+    $sql = "SELECT status, t.id, t.title, deadline, filepath, p.title project FROM tasks t JOIN projects p ON project_id = p.id WHERE t.user_id = $user_id AND p.id = $project_id ORDER BY t.deadline ASC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -363,7 +363,7 @@ function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $u
 {
     $search_phrase = mysqli_real_escape_string($connect, $search_phrase);
 
-    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id ORDER BY id DESC";
+    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST('$search_phrase') AND user_id = $user_id ORDER BY deadline ASC";
     $result = mysqli_query($connect, $sql);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -457,7 +457,7 @@ function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int 
         $deadline = date("Y-m-d", strtotime('+1 day 00:00:00'));
     }
     if ($task_deadline === "today" || $task_deadline === "tomorrow") {
-        $sql = "SELECT * FROM tasks WHERE deadline = '$deadline' AND user_id = $user_id ORDER BY id DESC";
+        $sql = "SELECT * FROM tasks WHERE deadline = '$deadline' AND user_id = $user_id ORDER BY deadline ASC";
     } elseif ($task_deadline === "overdue") {
         $today = date("Y-m-d", strtotime('00:00:00'));
         $sql = "SELECT * FROM tasks WHERE DATE(deadline) < '$today' AND status = 0 AND user_id = $user_id ORDER BY deadline DESC";
