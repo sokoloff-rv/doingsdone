@@ -27,8 +27,10 @@
                             <a href="/logout.php">Выйти</a>
                         </div>
                     </div>
-                <?php else : ?>
+                <?php elseif (!strpos($_SERVER['REQUEST_URI'], 'auth.php')) : ?>
                     <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
+                <?php else: ?>
+                    <a class="main-header__side-item button button--transparent" href="/registration.php">Зарегистрироваться</a>
                 <?php endif; ?>
                 </div>
             </header>
