@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#6e45e2">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body class="<?= !isset($_SESSION['user_id']) ? "body-background" : ""; ?>">
@@ -19,19 +26,19 @@
                     <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
                 </a>
                 <div class="main-header__side">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
-                    <div class="main-header__side-item user-menu">
-                        <div class="user-menu__data">
-                            <p><?= $user_name ?></p>
-                            <a href="/logout.php">Выйти</a>
+                    <?php if (isset($_SESSION['user_id'])) : ?>
+                        <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
+                        <div class="main-header__side-item user-menu">
+                            <div class="user-menu__data">
+                                <p><?= $user_name ?></p>
+                                <a href="/logout.php">Выйти</a>
+                            </div>
                         </div>
-                    </div>
-                <?php elseif (!strpos($_SERVER['REQUEST_URI'], 'auth.php')) : ?>
-                    <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
-                <?php else: ?>
-                    <a class="main-header__side-item button button--transparent" href="/registration.php">Зарегистрироваться</a>
-                <?php endif; ?>
+                    <?php elseif (!strpos($_SERVER['REQUEST_URI'], 'auth.php')) : ?>
+                        <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
+                    <?php else : ?>
+                        <a class="main-header__side-item button button--transparent" href="/registration.php">Зарегистрироваться</a>
+                    <?php endif; ?>
                 </div>
             </header>
 
