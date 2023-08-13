@@ -1,55 +1,116 @@
-# Личный проект «Дела в Порядке»
+# Doings done
+![PHP Version](https://img.shields.io/badge/php-%5E7.0-7A86B8)
+![MySQL Version](https://img.shields.io/badge/mysql-%5E5.6-F29221)
+![PHPUnit Version](https://img.shields.io/badge/phpunit-%5E7.5-3A97D0)
 
-* Студент: [Роман Соколов](https://up.htmlacademy.ru/php/14/user/94214).
-* Наставник: `Анатолий Пашин`.
+## О проекте
 
----
+«Doings done» — это веб-сервис для ведения списка дел, работающий на чистом PHP и MySQL, без использования фреймворков. Проект начального уровня сложности, реализован с помощью простой методологии процедурного программирования.
 
-**Обратите внимание на файл:**
+Демонстрационная версия доступна по адресу https://doingsdone.sokoloff-rv.ru/. 
 
-- [Contributing.md](Contributing.md) — руководство по внесению изменений.
+Для входа в **демо-аккаунт** используйте следующие данные:
 
---
+- Логин: user@demo.ru
+- Пароль: demopass
 
-_Не удаляйте и не обращайте внимание на файлы:_<br>
-_`.editorconfig`, `.gitattributes`, `.gitignore`._
+## Функциональность
 
----
+Основные возможности, реализованные в проекте:
 
-### Памятка
+- Регистрация на сайте;
+- Авторизация;
+- Добавление новых проектов (категорий);
+- Создание задач (каждая задача привязывается к проекту, может иметь дату окончания и вложение в виде файла);
+- Подсчет количества задач в проектах (не считая завершенные задачи);
+- Фильтрация и отображение задач по группам:
+    - все задачи,
+    - повестка дня,
+    - задачи на завтра,
+    - просроченные задачи;
+- Отображение задачи как важной, если до её дедлайна осталось менее 24 часов;
+- Поиск по задачам;
+- Скрытие или отображение выполненных задач;
+- Валидация всех форм;
+- Возврат страницы с ошибкой 404, если пользователь пытается открыть страницу с несуществующим проектом;
+- Отправка уведомлений о запланированных задачах на email пользователя.
 
-#### 1. Зарегистрируйтесь на Гитхабе
+## Обзор проекта
 
-Если у вас ещё нет аккаунта на [github.com](https://github.com/join), скорее зарегистрируйтесь.
+[![Видео](https://sokoloff-rv.ru/share/github/doingsdone.webp)](https://youtu.be/DAetbaQYWEI)
 
-#### 2. Создайте форк
+## Начало работы
 
-Откройте репозиторий и нажмите кнопку «Fork» в правом верхнем углу. Репозиторий из Академии будет скопирован в ваш аккаунт.
+Чтобы развернуть проект локально или на хостинге, выполните последовательно несколько действий:
 
-<img width="769" alt="" src="https://user-images.githubusercontent.com/10909/35516479-f4a65d24-051c-11e8-9177-a103fa2e8515.png">
+1. Клонируйте репозиторий:
 
-Получится вот так:
-
-<img width="769" alt="" src="https://user-images.githubusercontent.com/10909/35516478-f4892812-051c-11e8-9452-89bad64d6d32.png">
-
-#### 3. Клонируйте репозиторий на свой компьютер
-
-Будьте внимательны: нужно клонировать свой репозиторий (форк), а не репозиторий Академии. Также обратите внимание, что клонировать репозиторий нужно через SSH, а не через HTTPS. Нажмите зелёную кнопку в правой части экрана, чтобы скопировать SSH-адрес вашего репозитория:
-
-<img width="769" alt="" src="https://user-images.githubusercontent.com/10909/35516477-f46a8222-051c-11e8-9581-319b34b65f90.png">
-
-Клонировать репозиторий можно так:
-
+```bash
+git clone https://github.com/sokoloff-rv/94214-doingsdone-14.git doingsdone
 ```
-git clone SSH-адрес_вашего_форка
+
+2. Перейдите в директорию проекта:
+
+```bash
+cd doingsdone
 ```
 
-Команда клонирует репозиторий на ваш компьютер и подготовит всё необходимое для старта работы.
+3. Установите зависимости, выполнив команду:
 
-#### 4. Начинайте обучение!
+```bash
+composer install
+```
 
----
+4. Создайте базу данных для проекта, используя схему из файла `schema.sql`:
 
-<a href="https://htmlacademy.ru/intensive/php"><img align="left" width="50" height="50" alt="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/php/logo-for-github-2.png"></a>
+```sql
+CREATE DATABASE doingsdone
+    DEFAULT CHARACTER SET utf8
+    DEFAULT COLLATE utf8_general_ci;
 
-Репозиторий создан для обучения на профессиональном онлайн‑курсе «[PHP, уровень 1](https://htmlacademy.ru/intensive/php)» от [HTML Academy](https://htmlacademy.ru).
+USE doingsdone;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL
+);
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status BOOL NOT NULL DEFAULT '0',
+    title VARCHAR(255) NOT NULL,
+    filepath VARCHAR(255),
+    deadline DATETIME,
+    project_id INT NOT NULL,
+    user_id INT NOT NULL
+);
+
+CREATE FULLTEXT INDEX task_title_search ON tasks(title);
+```
+
+5. Настройте подключение к базе данных, создав в корне проекта файл `database.php` и указав параметры своего окружения. Например, это может выглядеть так:
+
+```php
+<?php
+
+return [
+    'host' => '127.0.0.1',
+    'user' => 'root',
+    'password' => 'root',
+    'name' => 'doingsdone'
+];
+```
+
+## Техническое задание
+
+[Посмотреть техническое задание проекта](https://sokoloff-rv.notion.site/Doings-done-f0e0b4c20066446fb640d4b03dfbd57e?pvs=4)
