@@ -46,7 +46,7 @@
 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/sokoloff-rv/94214-doingsdone-14.git doingsdone
+git clone https://github.com/sokoloff-rv/doingsdone.git doingsdone
 ```
 
 2. Перейдите в директорию проекта:
