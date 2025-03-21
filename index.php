@@ -22,7 +22,7 @@ if (isset($selected_project_id)) {
     $visible_tasks = get_user_tasks_by_project($connect, $selected_project_id, $user_id);
 } elseif (isset($task_deadline)) {
     $visible_tasks = get_user_tasks_by_deadline($connect, $task_deadline, $user_id);
-} elseif (strlen($search_phrase)) {
+} elseif ($search_phrase !== null && strlen($search_phrase)) {
     $visible_tasks = get_user_tasks_by_search($connect, $search_phrase, $user_id);
 } else {
     $visible_tasks = get_all_user_tasks($connect, $user_id);
