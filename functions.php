@@ -20,7 +20,9 @@ function count_tasks(mysqli $connect, int $project_id, int $user_id)
 }
 
 /**
- * Определяет считать ли задачу важной (до конца выполнения осталось меньше 24 часов) или нет
+ * Определяет считать ли задачу важной или нет.
+ * Задача важная, если её дедлайн ещё не прошёл (она не просрочена)
+ * и до дедлайна осталось меньше 24 часов.
  *
  * @param string $task_date дата окончания задачи
  *
@@ -33,7 +35,7 @@ function check_important($task_date)
         $task_timestamp = strtotime($task_date);
         $remainder_in_seconds = $task_timestamp - $actual_timestamp;
         $remainder_in_hours = floor($remainder_in_seconds / 3600);
-        return $remainder_in_hours < 24;
+        return $remainder_in_hours >= 0 && $remainder_in_hours < 24;
     }
     return false;
 }
