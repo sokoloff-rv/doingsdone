@@ -5,7 +5,7 @@
         <ul class="main-navigation__list">
             <?php foreach ($projects as $project): ?>
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="/index.php?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
+                <a class="main-navigation__list-item-link" href="/?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
                 <span class="main-navigation__list-item-count"><?= count_tasks($connect, $project['id'], $user_id); ?></span>
             </li>
             <?php endforeach; ?>

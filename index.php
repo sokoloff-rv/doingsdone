@@ -36,7 +36,7 @@ if (isset($selected_project_id)) {
 
 if (isset($_SESSION['user_id']) && isset($task_id) && isset($task_status)) {
     mark_task_completed($connect, $task_id, $task_status, $user_id);
-    header("Location: /index.php");
+    header("Location: /");
     exit();
 }
 

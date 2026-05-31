@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors['email']) && check_password($connect, $_POST['email'], $_POST['password'])) {
         $_SESSION['user_id'] = get_user_id($connect, $_POST['email']);
-        header('Location: /index.php');
+        header('Location: /');
         exit();
     } elseif (!is_filled('password')) {
         $errors['password'] = "Вы ввели неверный email/пароль";

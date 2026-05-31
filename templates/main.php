@@ -5,7 +5,7 @@
         <ul class="main-navigation__list">
             <?php foreach ($projects as $project): ?>
             <li class="main-navigation__list-item <?php if ((int) $selected_project_id === (int) $project['id']):?>main-navigation__list-item--active<?php endif;?>">
-                <a class="main-navigation__list-item-link" href="/index.php?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
+                <a class="main-navigation__list-item-link" href="/?project_id=<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></a>
                 <span class="main-navigation__list-item-count"><?= count_tasks($connect, $project['id'], $user_id); ?></span>
             </li>
             <?php endforeach; ?>
@@ -18,7 +18,7 @@
 <main class="content__main">
     <h2 class="content__main-heading">Список задач</h2>
 
-    <form class="search-form" action="index.php" method="get" autocomplete="off">
+    <form class="search-form" action="/" method="get" autocomplete="off">
     <input class="search-form__input" type="text" name="search" value="<?= htmlspecialchars((string)filter_input(INPUT_GET, 'search')) ?>" placeholder="Поиск по задачам">
         <input class="search-form__submit" type="submit" name="" value="Искать">
     </form>
@@ -26,9 +26,9 @@
     <div class="tasks-controls">
         <nav class="tasks-switch">
             <a href="/" class="tasks-switch__item <?= !isset($_GET['deadline']) && !isset($_GET['project_id']) && empty($_GET['search']) ? "tasks-switch__item--active" : "" ?>">Все задачи</a>
-            <a href="/index.php?deadline=today" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
-            <a href="/index.php?deadline=tomorrow" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
-            <a href="/index.php?deadline=overdue" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
+            <a href="/?deadline=today" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline'] === "today" ? "tasks-switch__item--active" : "" ?>">Повестка дня</a>
+            <a href="/?deadline=tomorrow" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "tomorrow" ? "tasks-switch__item--active" : "" ?>">Завтра</a>
+            <a href="/?deadline=overdue" class="tasks-switch__item <?= isset($_GET['deadline']) && $_GET['deadline']  === "overdue" ? "tasks-switch__item--active" : "" ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">

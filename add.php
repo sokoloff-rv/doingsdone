@@ -2,7 +2,7 @@
 require_once('init.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /index.php');
+    header('Location: /');
     exit();
 }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors['name']) && empty($errors['project']) && empty($errors['date']) && empty($errors['file'])) {
         add_new_task($connect, $_POST['name'], $file_link, $deadline, $_POST['project'], $user_id);
-        header('Location: /index.php');
+        header('Location: /');
         exit();
     }
 };

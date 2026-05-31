@@ -2,7 +2,7 @@
 require_once('init.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /index.php');
+    header('Location: /');
     exit();
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors['name'])) {
         add_new_project($connect, $_POST['name'], $user_id);
-        header('Location: /index.php');
+        header('Location: /');
         exit();
     }
 };
