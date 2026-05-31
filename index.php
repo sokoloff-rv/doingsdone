@@ -3,8 +3,8 @@ require_once('init.php');
 
 $selected_project_id = filter_input(INPUT_GET, 'project_id');
 $search_phrase = filter_input(INPUT_GET, 'search');
-$task_id = filter_input(INPUT_GET, 'task_id');
-$task_status = filter_input(INPUT_GET, 'check');
+$task_id = filter_input(INPUT_GET, 'task_id', FILTER_VALIDATE_INT);
+$task_status = filter_input(INPUT_GET, 'check', FILTER_VALIDATE_INT);
 $task_deadline = filter_input(INPUT_GET, 'deadline');
 $user_projects = get_user_projects($connect, $user_id);
 $user_projects_ids = array_column($user_projects, 'id');
@@ -34,7 +34,8 @@ if (isset($selected_project_id)) {
     $visible_tasks = get_all_user_tasks($connect, $user_id);
 }
 
-if (isset($_SESSION['user_id']) && isset($task_id) && isset($task_status)) {
+if (isset($_SESSION['user_id']) && is_int($task_id) && is_int($task_status)) {
+    $task_status = $task_status ? 1 : 0;
     mark_task_completed($connect, $task_id, $task_status, $user_id);
     header("Location: /");
     exit();
