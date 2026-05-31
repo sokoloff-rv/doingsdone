@@ -28,5 +28,3 @@ CREATE TABLE tasks (
     project_id INT NOT NULL,
     user_id INT NOT NULL
 );
-
-CREATE FULLTEXT INDEX task_title_search ON tasks(title);
