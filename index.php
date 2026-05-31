@@ -11,7 +11,13 @@ $user_projects_ids = array_column($user_projects, 'id');
 
 if (isset($_GET['show_completed'])) {
     $show_complete_tasks = filter_input(INPUT_GET, 'show_completed');
-    setcookie('show_complete_tasks', $show_complete_tasks);
+    setcookie('show_complete_tasks', $show_complete_tasks, [
+        'expires' => time() + 30 * 24 * 60 * 60,
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
 } elseif (isset($_COOKIE['show_complete_tasks'])) {
     $show_complete_tasks = $_COOKIE['show_complete_tasks'];
 } else {
