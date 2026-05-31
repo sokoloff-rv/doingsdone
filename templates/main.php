@@ -37,7 +37,7 @@
         </label>
     </div>
 
-    <?php if (htmlspecialchars((string)filter_input(INPUT_GET, 'search')) && !count($visible_tasks)): ?>
+    <?php if (filter_input(INPUT_GET, 'search') && !count($visible_tasks)): ?>
         <p>Ничего не найдено по вашему запросу</p>
     <?php endif;?>
 
@@ -63,7 +63,7 @@
                     <a class="download-link" href="<?= htmlspecialchars($value['filepath']) ?>">Скачать файл</a>
                 <?php endif;?>
             </td>
-            <td class="task__date"><?= $value['deadline'] ? date("Y-m-d", strtotime(htmlspecialchars($value['deadline']))) : 'Без даты' ?></td>
+            <td class="task__date"><?= $value['deadline'] ? date("Y-m-d", strtotime($value['deadline'])) : 'Без даты' ?></td>
             <td class="task__controls"></td>
         </tr>
         <?php endforeach; ?>
