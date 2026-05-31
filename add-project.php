@@ -15,10 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('Ошибка проверки безопасности формы. Обновите страницу и попробуйте снова.');
     }
 
-    $errors['name'] = is_filled('name');
-    if (!is_filled('name')) {
-        $errors['name'] = is_unique_name($connect, $_POST['name'], $user_id);
+    $name_error = is_filled('name');
+    if (!$name_error) {
+        $name_error = is_unique_name($connect, $_POST['name'], $user_id);
     }
+    $errors['name'] = $name_error;
 
     if (empty($errors['name'])) {
         add_new_project($connect, $_POST['name'], $user_id);

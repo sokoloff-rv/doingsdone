@@ -237,12 +237,11 @@ function add_new_user(mysqli $connect, string $email, string $password, string $
 /**
  * Проверяет email на валидность
  *
- * @param mysqli $connect состояние подключения к БД
  * @param string $email пользователя
  *
  * @return string|null текст ошибки
  */
-function check_email_validity(mysqli $connect, string $email)
+function check_email_validity(string $email)
 {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email! ";

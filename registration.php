@@ -9,13 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('Ошибка проверки безопасности формы. Обновите страницу и попробуйте снова.');
     }
 
-    $errors['email'] = is_filled('email');
-    if (!is_filled('email')) {
-        $errors['email'] = check_email_validity($connect, $_POST['email']);
-        if (!check_email_validity($connect, $_POST['email'])) {
-            $errors['email'] = check_email_availability($connect, $_POST['email']);
+    $email_error = is_filled('email');
+    if (!$email_error) {
+        $email_error = check_email_validity($_POST['email']);
+        if (!$email_error) {
+            $email_error = check_email_availability($connect, $_POST['email']);
         }
     }
+    $errors['email'] = $email_error;
     $errors['password'] = is_filled('password');
     $errors['name'] = is_filled('name');
 
