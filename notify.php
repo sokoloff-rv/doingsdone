@@ -11,8 +11,8 @@ if (PHP_SAPI !== 'cli') {
 require_once("vendor/autoload.php");
 require_once("init.php");
 
-$dsn = 'smtp://71ab17249e5d8d:38ef5b66ad2053@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
-$transport = Transport::fromDsn($dsn);
+$config = require __DIR__ . '/config.php';
+$transport = Transport::fromDsn($config['mail_dsn']);
 
 $initial_data = get_users_today_tasks($connect);
 $processed_data = [];
@@ -28,7 +28,7 @@ foreach ($initial_data as $user_data) {
 foreach ($processed_data as $data) {
     $message = new Email();
     $message->to($data['email']);
-    $message->from("keks@phpdemo.ru");
+    $message->from($config['mail_from']);
     $message->subject("Уведомление от сервиса «Дела в порядке»");
     $message_text = "Уважаемый, {$data['name']}.\n";
     if (count($data["tasks"]) === 1) {

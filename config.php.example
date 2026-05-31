@@ -1,0 +1,9 @@
+<?php
+
+return [
+    // DSN для отправки писем через Symfony Mailer, например:
+    // smtp://login:password@smtp.example.com:2525?encryption=tls&auth_mode=login
+    'mail_dsn' => 'smtp://login:password@smtp.example.com:2525?encryption=tls&auth_mode=login',
+    // Адрес отправителя уведомлений
+    'mail_from' => 'keks@phpdemo.ru',
+];
