@@ -206,6 +206,9 @@ function add_new_task(mysqli $connect, string $title, ?string $filepath, ?string
     $data = [$title, $project_id, $user_id];
 
     if ($deadline) {
+        // Дедлайн указывается датой без времени, ставим конец дня (23:59),
+        // чтобы задача считалась актуальной весь день, как и в CRON-скрипте.
+        $deadline = date('Y-m-d 23:59:00', strtotime($deadline));
         $sql .= ", deadline = ?";
         $data[] = $deadline;
     }
