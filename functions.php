@@ -347,7 +347,6 @@ function mark_task_completed(mysqli $connect, int $task_id, int $task_status, in
     $sql = "UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?";
     $stmt = db_get_prepare_stmt($connect, $sql, [$task_status, $task_id, $user_id]);
     mysqli_stmt_execute($stmt);
-    header("Location: /index.php");
 }
 
 /**
