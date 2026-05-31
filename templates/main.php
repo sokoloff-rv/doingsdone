@@ -60,7 +60,7 @@
             </td>
             <td class="task__file">
                 <?php if ($value['filepath']): ?>
-                    <a class="download-link" href="<?= $value['filepath'] ?>">Скачать файл</a>
+                    <a class="download-link" href="<?= htmlspecialchars($value['filepath']) ?>">Скачать файл</a>
                 <?php endif;?>
             </td>
             <td class="task__date"><?= $value['deadline'] ? date("Y-m-d", strtotime(htmlspecialchars($value['deadline']))) : 'Без даты' ?></td>
