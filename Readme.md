@@ -1,5 +1,5 @@
 # Doings done
-![PHP Version](https://img.shields.io/badge/php-%5E7.0-7A86B8)
+![PHP Version](https://img.shields.io/badge/php-%5E8.0-7A86B8)
 ![MySQL Version](https://img.shields.io/badge/mysql-%5E5.6-F29221)
 ![PHPUnit Version](https://img.shields.io/badge/phpunit-%5E7.5-3A97D0)
 

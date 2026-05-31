@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "php": "^8.0",
         "symfony/mailer": "^5.4"
     },
     "require-dev": {
