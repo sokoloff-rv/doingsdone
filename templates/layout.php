@@ -31,7 +31,7 @@
                         <div class="main-header__side-item user-menu">
                             <div class="user-menu__data">
                                 <p><?= htmlspecialchars($user_name) ?></p>
-                                <a href="/logout.php">Выйти</a>
+                                <a href="/logout.php?token=<?= htmlspecialchars(get_csrf_token()) ?>">Выйти</a>
                             </div>
                         </div>
                     <?php elseif (!strpos($_SERVER['REQUEST_URI'], 'auth.php')) : ?>

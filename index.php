@@ -5,6 +5,7 @@ $selected_project_id = filter_input(INPUT_GET, 'project_id');
 $search_phrase = filter_input(INPUT_GET, 'search');
 $task_id = filter_input(INPUT_GET, 'task_id', FILTER_VALIDATE_INT);
 $task_status = filter_input(INPUT_GET, 'check', FILTER_VALIDATE_INT);
+$csrf_token = filter_input(INPUT_GET, 'token');
 $task_deadline = filter_input(INPUT_GET, 'deadline');
 $user_projects = get_user_projects($connect, $user_id);
 $user_projects_ids = array_column($user_projects, 'id');
@@ -35,6 +36,10 @@ if (isset($selected_project_id)) {
 }
 
 if (isset($_SESSION['user_id']) && is_int($task_id) && is_int($task_status)) {
+    if (!check_csrf_token($csrf_token)) {
+        http_response_code(403);
+        exit('Ошибка проверки безопасности.');
+    }
     $task_status = $task_status ? 1 : 0;
     mark_task_completed($connect, $task_id, $task_status, $user_id);
     header("Location: /");

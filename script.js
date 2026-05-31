@@ -23,8 +23,9 @@ if ($taskCheckboxes.length) {
 
       var is_checked = +el.checked;
       var task_id = el.getAttribute('value');
+      var token = $taskCheckboxes[0].dataset.csrf || '';
 
-      var url = '/?task_id=' + task_id + '&check=' + is_checked;
+      var url = '/?task_id=' + task_id + '&check=' + is_checked + '&token=' + encodeURIComponent(token);
       window.location = url;
     }
   });

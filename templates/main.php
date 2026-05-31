@@ -41,7 +41,7 @@
         <p>Ничего не найдено по вашему запросу</p>
     <?php endif;?>
 
-    <table class="tasks">
+    <table class="tasks" data-csrf="<?= htmlspecialchars(get_csrf_token()) ?>">
         <?php foreach ($visible_tasks as $key => $value): ?>
         <?php if ($value['status'] && !$show_complete_tasks): continue; endif; ?>
         <?php $class = "";

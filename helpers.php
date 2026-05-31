@@ -145,15 +145,27 @@ function csrf_field(): string
 }
 
 /**
+ * Сравнивает переданный CSRF-токен с токеном сессии
+ *
+ * @param mixed $token проверяемый токен (из формы или из параметра запроса)
+ *
+ * @return bool true если токен корректный, иначе false
+ */
+function check_csrf_token($token): bool
+{
+    return isset($_SESSION['csrf_token'])
+        && is_string($token)
+        && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
  * Проверяет CSRF-токен из отправленной формы на совпадение с токеном сессии
  *
  * @return bool true если токен корректный, иначе false
  */
 function is_csrf_valid(): bool
 {
-    return isset($_POST['csrf_token'], $_SESSION['csrf_token'])
-        && is_string($_POST['csrf_token'])
-        && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
+    return check_csrf_token($_POST['csrf_token'] ?? null);
 }
 
 /**
