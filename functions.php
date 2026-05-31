@@ -3,15 +3,15 @@
  * Подсчитывает количество невыполненных задач в проекте
  *
  * @param mysqli $connect состояние подключения к БД
- * @param string $project_name название проекта
+ * @param int $project_id идентификатор проекта
  * @param int $user_id идентификатор пользователя
  *
  * @return int количество задач в проекте
  */
-function count_tasks(mysqli $connect, string $project_name, int $user_id)
+function count_tasks(mysqli $connect, int $project_id, int $user_id)
 {
-    $sql = "SELECT count(*) cnt FROM tasks t JOIN projects p ON project_id = p.id WHERE p.title = ? AND p.user_id = ? AND status = 0";
-    $stmt = db_get_prepare_stmt($connect, $sql, [$project_name, $user_id]);
+    $sql = "SELECT count(*) cnt FROM tasks WHERE project_id = ? AND user_id = ? AND status = 0";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$project_id, $user_id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $tasks_count = mysqli_fetch_assoc($result);
