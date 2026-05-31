@@ -10,6 +10,11 @@ $projects_list = get_user_projects($connect, $user_id);
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!is_csrf_valid()) {
+        http_response_code(403);
+        exit('Ошибка проверки безопасности формы. Обновите страницу и попробуйте снова.');
+    }
+
     $errors['name'] = is_filled('name');
     $errors['project'] = is_project_exist($projects_list, 'project');
     $errors['date'] = is_correct_date('date');

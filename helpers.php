@@ -122,6 +122,41 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 }
 
 /**
+ * Возвращает CSRF-токен текущей сессии, создавая его при необходимости
+ *
+ * @return string CSRF-токен
+ */
+function get_csrf_token(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Возвращает HTML скрытого поля с CSRF-токеном для вставки в форму
+ *
+ * @return string HTML скрытого поля
+ */
+function csrf_field(): string
+{
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(get_csrf_token()) . '">';
+}
+
+/**
+ * Проверяет CSRF-токен из отправленной формы на совпадение с токеном сессии
+ *
+ * @return bool true если токен корректный, иначе false
+ */
+function is_csrf_valid(): bool
+{
+    return isset($_POST['csrf_token'], $_SESSION['csrf_token'])
+        && is_string($_POST['csrf_token'])
+        && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
+}
+
+/**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона

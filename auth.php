@@ -4,6 +4,11 @@ require_once('init.php');
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!is_csrf_valid()) {
+        http_response_code(403);
+        exit('Ошибка проверки безопасности формы. Обновите страницу и попробуйте снова.');
+    }
+
     $errors['email'] = is_filled('email');
     if (!is_filled('email')) {
         $errors['email'] = check_email_validity($connect, $_POST['email']);

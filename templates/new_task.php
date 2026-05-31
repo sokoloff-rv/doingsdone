@@ -19,6 +19,7 @@
     <h2 class="content__main-heading">Добавление задачи</h2>
 
     <form class="form" action="add.php" method="post" autocomplete="off" enctype="multipart/form-data">
+        <?= csrf_field() ?>
         <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 

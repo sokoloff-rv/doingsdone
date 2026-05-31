@@ -4,6 +4,7 @@
     <h2 class="content__main-heading">Регистрация аккаунта</h2>
 
     <form class="form" action="registration.php" method="post" autocomplete="off">
+        <?= csrf_field() ?>
         <div class="form__row">
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
             <input class="form__input <?= isset($errors['email']) ? "form__input--error" : ""?> type="text" name="email" id="email" value="<?= htmlspecialchars(get_post_value('email')) ?>" placeholder="Введите e-mail">
