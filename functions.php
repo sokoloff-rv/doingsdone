@@ -329,8 +329,13 @@ function get_user_id(mysqli $connect, string $email)
  */
 function get_user_tasks_by_search(mysqli $connect, string $search_phrase, int $user_id)
 {
-    $sql = "SELECT * FROM tasks WHERE MATCH(title) AGAINST(?) AND user_id = ? ORDER BY deadline ASC";
-    $stmt = db_get_prepare_stmt($connect, $sql, [$search_phrase, $user_id]);
+    // Поиск по подстроке: экранируем спецсимволы LIKE (% и _), чтобы они
+    // не воспринимались как шаблоны, и ищем вхождение в любом месте названия.
+    $escaped = addcslashes($search_phrase, '%_\\');
+    $like = '%' . $escaped . '%';
+
+    $sql = "SELECT * FROM tasks WHERE title LIKE ? AND user_id = ? ORDER BY deadline ASC";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$like, $user_id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
