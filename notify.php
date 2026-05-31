@@ -37,8 +37,8 @@ foreach ($processed_data as $data) {
         $message_text = $message_text."У вас запланированы задачи:\n";
     }
     foreach ($data["tasks"] as $task) {
-        $task["deadline"] = date("d.m.Y");
-        $message_text = $message_text."- {$task['title']} на {$task['deadline']}.\n";
+        $deadline = date("d.m.Y", strtotime($task["deadline"]));
+        $message_text = $message_text."- {$task['title']} на {$deadline}.\n";
     }
     $message->text($message_text);
     $mailer = new Mailer($transport);
