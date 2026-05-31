@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['password'] = is_filled('password');
 
     if (empty($errors['email']) && check_password($connect, $_POST['email'], $_POST['password'])) {
+        session_regenerate_id(true);
         $_SESSION['user_id'] = get_user_id($connect, $_POST['email']);
         header('Location: /');
         exit();

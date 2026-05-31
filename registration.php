@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors['email']) && empty($errors['password']) && empty($errors['name'])) {
         add_new_user($connect, $_POST['email'], $_POST['password'], $_POST['name']);
+        session_regenerate_id(true);
         $_SESSION['user_id'] = get_user_id($connect, $_POST['email']);
         header('Location: /');
         exit();
