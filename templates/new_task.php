@@ -35,7 +35,7 @@
             <select class="form__input form__input--select <?= isset($errors['project']) ? "form__input--error" : ""?>" name="project" id="project">
                 <?php foreach ($projects as $project): ?>
                 <li class="main-navigation__list-item <?php if (($selected_project_id) === $project['id']):?>main-navigation__list-item--active<?php endif;?>">
-                    <option <?= htmlspecialchars(get_post_value('project')) === $project['id'] ? "selected" : "" ?> value="<?= $project['id'] ?>"><?= $project['title'] ?></option>
+                    <option <?= (int) get_post_value('project') === (int) $project['id'] ? "selected" : "" ?> value="<?= $project['id'] ?>"><?= htmlspecialchars($project['title']) ?></option>
                 </li>
                 <?php endforeach; ?>
             </select>

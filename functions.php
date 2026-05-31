@@ -154,7 +154,7 @@ function is_project_exist($projects, $input_name)
 {
     $project_exists = false;
     foreach ($projects as $project) {
-        if ($project['id'] === $_POST[$input_name]) {
+        if ((int) $project['id'] === (int) $_POST[$input_name]) {
             $project_exists = true;
         }
     }
