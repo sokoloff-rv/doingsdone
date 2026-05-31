@@ -3,6 +3,11 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Этот скрипт можно запускать только из командной строки.');
+}
+
 require_once("vendor/autoload.php");
 require_once("init.php");
 

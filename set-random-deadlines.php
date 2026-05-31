@@ -1,5 +1,10 @@
 <?php
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Этот скрипт можно запускать только из командной строки.');
+}
+
 $db_config = require __DIR__ . '/database.php';
 
 $mysqli = new mysqli(
