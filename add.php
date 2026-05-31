@@ -20,15 +20,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $file_link = null;
-    if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-        $file_name = 'file-' . uniqid() . '_' . $_FILES['file']['name'];
-        $file_path = __DIR__ . '/uploads/';
-        $file_url = '/uploads/' . $file_name;
-        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
-        $file_link = '/uploads/' . $file_name;
+    if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+        $max_file_size = 10 * 1024 * 1024; // 10 МБ
+        $forbidden_extensions = ['php', 'php3', 'php4', 'php5', 'php7', 'phtml', 'pht', 'phar', 'cgi', 'pl', 'sh', 'exe', 'htaccess'];
+        $original_name = basename($_FILES['file']['name']);
+        $extension = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+
+        if ($_FILES['file']['size'] > $max_file_size) {
+            $errors['file'] = 'Размер файла не должен превышать 10 МБ! ';
+        } elseif (in_array($extension, $forbidden_extensions, true)) {
+            $errors['file'] = 'Загрузка файлов такого типа запрещена! ';
+        } else {
+            $file_name = 'file-' . uniqid() . '_' . $original_name;
+            $file_path = __DIR__ . '/uploads/';
+            move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
+            $file_link = '/uploads/' . $file_name;
+        }
     }
 
-    if (empty($errors['name']) && empty($errors['project']) && empty($errors['date'])) {
+    if (empty($errors['name']) && empty($errors['project']) && empty($errors['date']) && empty($errors['file'])) {
         add_new_task($connect, $_POST['name'], $file_link, $deadline, $_POST['project'], $user_id);
         header('Location: /index.php');
         exit();
