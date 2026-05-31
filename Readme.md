@@ -1,7 +1,6 @@
 # Doings done
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-7A86B8)
 ![MySQL Version](https://img.shields.io/badge/mysql-%5E5.6-F29221)
-![PHPUnit Version](https://img.shields.io/badge/phpunit-%5E7.5-3A97D0)
 
 ## О проекте
 
@@ -28,7 +27,7 @@
     - повестка дня,
     - задачи на завтра,
     - просроченные задачи;
-- Отображение задачи как важной, если до её дедлайна осталось менее 24 часов;
+- Отображение задачи как важной, если она ещё не просрочена и до её дедлайна осталось менее 24 часов;
 - Поиск по задачам;
 - Скрытие или отображение выполненных задач;
 - Валидация всех форм;
@@ -94,8 +93,6 @@ CREATE TABLE tasks (
     project_id INT NOT NULL,
     user_id INT NOT NULL
 );
-
-CREATE FULLTEXT INDEX task_title_search ON tasks(title);
 ```
 
 5. Настройте подключение к базе данных, создав в корне проекта файл `database.php` и указав параметры своего окружения. Например, это может выглядеть так:
@@ -109,6 +106,29 @@ return [
     'password' => 'root',
     'name' => 'doingsdone'
 ];
+```
+
+6. Для отправки email-уведомлений создайте файл `config.php` на основе `config.php.example` и укажите в нём параметры почты:
+
+```bash
+cp config.php.example config.php
+```
+
+После этого отредактируйте `config.php`, указав DSN вашего почтового сервиса и адрес отправителя:
+
+```php
+<?php
+
+return [
+    'mail_dsn' => 'smtp://login:password@smtp.example.com:2525?encryption=tls&auth_mode=login',
+    'mail_from' => 'keks@phpdemo.ru',
+];
+```
+
+Рассылка уведомлений запускается скриптом `notify.php` из командной строки (его удобно повесить на CRON):
+
+```bash
+php notify.php
 ```
 
 ## Техническое задание
