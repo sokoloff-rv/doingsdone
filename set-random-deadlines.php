@@ -19,10 +19,10 @@ if ($mysqli->connect_error) {
 }
 
 /**
- * Возвращает дедлайн (в 00:00:00) для заданной категории фильтра меню,
+ * Возвращает дедлайн (в 23:59) для заданной категории фильтра меню,
  * чтобы соответствующая вкладка гарантированно содержала задачи.
  *
- * @param string $category одна из категорий: overdue, today, tomorrow, future
+ * @param string $category одна из категорий: overdue, today, tomorrow, future, done
  *
  * @return string дедлайн в формате 'Y-m-d H:i:s'
  */
@@ -31,6 +31,7 @@ function deadline_for_category(string $category): string {
 
     switch ($category) {
         case 'overdue':
+        case 'done':
             $date->modify('-' . rand(1, 7) . ' days');
             break;
         case 'today':
@@ -44,13 +45,19 @@ function deadline_for_category(string $category): string {
             break;
     }
 
-    return $date->format('Y-m-d 00:00:00');
+    return $date->format('Y-m-d 23:59:00');
 }
 
 // Категории перебираются циклически, поэтому при достаточном количестве задач
-// каждая вкладка меню («Просроченные», «Повестка дня», «Завтра», «Все задачи»)
-// всегда получает хотя бы одну задачу.
-$categories = ['overdue', 'today', 'tomorrow', 'future'];
+// каждая вкладка меню всегда получает хотя бы одну задачу. Категория 'done' —
+// это выполненные задачи в прошлом (status = 1), остальные не выполнены (status = 0).
+$categories = [
+    ['type' => 'overdue',  'status' => 0],
+    ['type' => 'today',    'status' => 0],
+    ['type' => 'tomorrow', 'status' => 0],
+    ['type' => 'future',   'status' => 0],
+    ['type' => 'done',     'status' => 1],
+];
 
 $user_id = isset($argv[1]) ? (int) $argv[1] : 2;
 
@@ -67,18 +74,19 @@ if ($result) {
     while ($row = $result->fetch_assoc()) {
         $task_id = (int)$row['id'];
         $category = $categories[$index % count($categories)];
-        $deadline = deadline_for_category($category);
+        $deadline = deadline_for_category($category['type']);
+        $status = $category['status'];
 
-        $update_sql = "UPDATE tasks SET deadline = ?, status = 0, creation_date = ? WHERE id = ?";
+        $update_sql = "UPDATE tasks SET deadline = ?, status = ?, creation_date = ? WHERE id = ?";
         $stmt = $mysqli->prepare($update_sql);
-        $stmt->bind_param('ssi', $deadline, $current_date, $task_id);
+        $stmt->bind_param('sisi', $deadline, $status, $current_date, $task_id);
         $stmt->execute();
         $stmt->close();
 
         $index++;
     }
 
-    echo "Задачи пользователя с ID {$user_id} обновлены ({$index} шт.): дедлайны распределены по всем вкладкам меню.\n";
+    echo "Задачи пользователя с ID {$user_id} обновлены ({$index} шт.): дедлайны на 23:59 распределены по всем вкладкам меню, часть прошлых задач помечена выполненными.\n";
 } else {
     echo "Ошибка при получении задач пользователя $user_id: " . $mysqli->error;
 }
