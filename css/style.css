@@ -117,6 +117,7 @@ a:focus {
   background-color: #6e45e2;
   border: 0;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .button--plus::before {
@@ -141,7 +142,6 @@ a:focus {
 .button--transparent {
   color: #6e45e2;
   border: 1px solid #d7dbe8;
-  cursor: pointer;
 }
 
 .button--transparent:hover,
@@ -361,6 +361,7 @@ a:focus {
 
   background: transparent url("../img/search.png") no-repeat 50% 50%;
   border: 0;
+  cursor: pointer;
 }
 
 .tasks-controls {
@@ -430,6 +431,7 @@ a:focus {
   vertical-align: top;
 
   border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .checkbox__input:checked + .checkbox__text::before {
