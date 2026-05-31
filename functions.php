@@ -400,15 +400,15 @@ function is_unique_name(mysqli $connect, string $title, int $user_id)
 function get_user_tasks_by_deadline(mysqli $connect, string $task_deadline, int $user_id)
 {
     if ($task_deadline === "today") {
-        $deadline = date("Y-m-d", strtotime('00:00:00'));
-        $sql = "SELECT * FROM tasks WHERE deadline = ? AND user_id = ? ORDER BY deadline ASC";
+        $deadline = date("Y-m-d");
+        $sql = "SELECT * FROM tasks WHERE DATE(deadline) = ? AND user_id = ? ORDER BY deadline ASC";
         $data = [$deadline, $user_id];
     } elseif ($task_deadline === "tomorrow") {
-        $deadline = date("Y-m-d", strtotime('+1 day 00:00:00'));
-        $sql = "SELECT * FROM tasks WHERE deadline = ? AND user_id = ? ORDER BY deadline ASC";
+        $deadline = date("Y-m-d", strtotime('+1 day'));
+        $sql = "SELECT * FROM tasks WHERE DATE(deadline) = ? AND user_id = ? ORDER BY deadline ASC";
         $data = [$deadline, $user_id];
     } elseif ($task_deadline === "overdue") {
-        $today = date("Y-m-d", strtotime('00:00:00'));
+        $today = date("Y-m-d");
         $sql = "SELECT * FROM tasks WHERE DATE(deadline) < ? AND status = 0 AND user_id = ? ORDER BY deadline DESC";
         $data = [$today, $user_id];
     } else {
