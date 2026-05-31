@@ -28,7 +28,7 @@ if (isset($selected_project_id)) {
     $visible_tasks = get_all_user_tasks($connect, $user_id);
 }
 
-if (isset($task_id) && isset($task_status)) {
+if (isset($_SESSION['user_id']) && isset($task_id) && isset($task_status)) {
     mark_task_completed($connect, $task_id, $task_status, $user_id);
 }
 

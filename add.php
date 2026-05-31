@@ -1,6 +1,11 @@
 <?php
 require_once('init.php');
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /index.php');
+    exit();
+}
+
 $projects_list = get_user_projects($connect, $user_id);
 $errors = [];
 
@@ -38,10 +43,6 @@ $page_content_data = [
     'user_id' => $user_id
 ];
 $page_content = include_template('new_task.php', $page_content_data);
-
-if (!isset($_SESSION['user_id'])) {
-    $page_content = include_template('guest.php');
-}
 
 $layout_content_data = [
     'page_content' => $page_content,
