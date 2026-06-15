@@ -133,4 +133,4 @@ php notify.php
 
 ## Техническое задание
 
-[Посмотреть техническое задание проекта](https://sokoloff-rv.notion.site/Doings-done-f0e0b4c20066446fb640d4b03dfbd57e?pvs=4)
+[Посмотреть техническое задание проекта](tz.md)
